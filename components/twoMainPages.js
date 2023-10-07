@@ -5,11 +5,11 @@ import TabNavigator from "./tabNavigator";
 import MakeMyOutfitUI from "./makeMyOutfit";
 import ClosetUI from "./closet";
 
-
 const Stack = createStackNavigator();
 
 const TwoMainPages = ({ route }) => {
   const { session } = route.params;
+
   return (
     <NavigationContainer independent={true} style={{ marginBottom: -20 }}>
       <Stack.Navigator
@@ -26,7 +26,6 @@ const TwoMainPages = ({ route }) => {
           component={MakeMyOutfitUI}
           initialParams={{ session }}
         />
-       
       </Stack.Navigator>
     </NavigationContainer>
   );

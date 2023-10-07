@@ -13,6 +13,7 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ route }) => {
   const { session } = route.params;
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -43,17 +44,17 @@ const TabNavigator = ({ route }) => {
                 color={focused ? "white" : "grey"}
               />
             );
-          } 
+          }
         },
-        tabBarLabel: () => null, 
+        tabBarLabel: () => null,
       })}
     >
       <Tab.Screen
         name="Closet"
         component={ClosetUI}
-        initialParams={{ session }} 
+        initialParams={{ session }}
       />
-      
+
       <Tab.Screen
         name="MakeMyOutfit"
         component={MakeMyOutfitUI}

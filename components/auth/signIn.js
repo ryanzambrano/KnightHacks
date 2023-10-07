@@ -17,7 +17,6 @@ import { supabase } from "./supabase.js";
 export const SignIn = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const shakeAnimationValue = useRef(new Animated.Value(0)).current;
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -43,7 +42,6 @@ export const SignIn = ({ navigation }) => {
 
     if (error) {
       setError("Invalid email or password, please try again");
-      startShakeAnimation(shakeAnimationValue); // Set error message
       setLoading(false);
     } else {
       validateUserSession();
@@ -54,17 +52,6 @@ export const SignIn = ({ navigation }) => {
     email: "",
     password: "",
   });
-
-  const shakeAnimationStyle = {
-    transform: [
-      {
-        translateX: shakeAnimationValue.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [-5, 0, 5],
-        }),
-      },
-    ],
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#111111" }}>

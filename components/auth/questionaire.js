@@ -20,10 +20,12 @@ export const Questionaire = ({ navigation, route }) => {
   const [selectedName, setSelectedName] = useState("");
   const [isError, setIsError] = useState("");
 
-  const shakeAnimationValue = useRef(new Animated.Value(0)).current;
-
   const userData = {
     name: selectedName,
+  };
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
   };
 
   const handleUpdate = async (userData, session) => {
@@ -47,58 +49,26 @@ export const Questionaire = ({ navigation, route }) => {
           .from("profile")
           .update({
             name: selectedName,
+            profile_complete: true,
           })
           .eq("user_id", session.user.id);
 
         if (error) {
-          startShakeAnimation();
           setIsError(error.message);
         } else {
+          refreshSession();
         }
       } else setIsError("Enter a valid name");
     }
   };
 
+  async function refreshSession() {
+    const { data, error } = await supabase.auth.refreshSession();
+    const { session, user } = data;
+  }
+
   const dismissKeyboard = () => {
     Keyboard.dismiss();
-  };
-
-  const startShakeAnimation = () => {
-    shakeAnimationValue.setValue(0);
-    Animated.sequence([
-      Animated.timing(shakeAnimationValue, {
-        toValue: 1,
-        duration: 100,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimationValue, {
-        toValue: -1,
-        duration: 100,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimationValue, {
-        toValue: 0,
-        duration: 100,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-  };
-
-  const shakeAnimationStyle = {
-    transform: [
-      {
-        translateX: shakeAnimationValue.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [-5, 0, 5],
-        }),
-      },
-    ],
   };
 
   return (
@@ -121,10 +91,7 @@ export const Questionaire = ({ navigation, route }) => {
             ></TextInput>
           </View>
           {isError && (
-            <Animated.Text
-              style={[styles.errorText, shakeAnimationStyle]}
-              value={isError}
-            >
+            <Animated.Text style={[styles.errorText]} value={isError}>
               {isError}
             </Animated.Text>
           )}
@@ -133,6 +100,7 @@ export const Questionaire = ({ navigation, route }) => {
               onPress={() => {
                 {
                   handleUpdate(userData, session);
+                  //signOut();
                 }
               }}
             >

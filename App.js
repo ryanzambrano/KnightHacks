@@ -6,7 +6,7 @@ import { supabase } from "./components/auth/supabase.js";
 //import { logo } from "./logo.png";
 import Authentication from "./components/auth/authentication.js";
 import Questionaire from "./components/auth/questionaire.js";
-//import TwoMainPages from "./components/miscellaneous/TwoMainPages.js";
+import TwoMainPages from "./components/twoMainPages.js";
 
 const Stack = createStackNavigator(); // Creating a stack is important for navigation. Must initialize the stack with creatStackNavigator().
 
@@ -40,37 +40,42 @@ const App = () => {
   const checkUserProfile = async (session) => {
     if (session?.user) {
       setIsLoading(true);
+
       const { data, error } = await supabase
         .from("profile")
         .select("profile_complete")
         .eq("user_id", session.user.id)
         .single();
 
-      if (data == null) {
+      /*if (error) {
+        setIsLoading(false);
+        alert("initial error");
+        throw new Error(error.message);
+      }*/
+
+      if (data) {
+        // Profile exists for the user
+        if (data.profile_complete) {
+          setHasProfile(true);
+        } else {
+          console.log("profile invalid");
+        }
+      } else {
+        alert("inserting");
         // User does not have a profile, insert a new profile
-        const { data, error } = await supabase
+        const { data: insertData, error: insertError } = await supabase
           .from("profile")
           .insert([{ user_id: session.user.id, profile_complete: false }]);
-      }
-      if (imageData == null) {
-        const { data: imageData, error: imageError } = await supabase
-          .from("user_images")
-          .insert([{ user_id: session.user.id }]);
-      }
-      if (error || imageError) {
-        setIsLoading(false);
-        throw new Error("error.message");
+
+        if (insertError) {
+          setIsLoading(false);
+          alert("Error inserting profile");
+          throw new Error(insertError.message);
+        }
       }
 
-      if (data.profile_complete == true && ugcData.has_ugc == true) {
-        const hasProfile = !!data.profile_complete;
-
-        setHasProfile(true);
-      } else {
-        console.log("profile invalid");
-      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   if (isLoading) {

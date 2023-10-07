@@ -13,11 +13,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Animated,
-} 
-from "react-native";
-
+} from "react-native";
 import { supabase } from "./supabase.js";
-
 
 export const SignUp = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -40,39 +37,21 @@ export const SignUp = ({ navigation }) => {
     setPasswordsMatch(true);
     setIsError(null);
 
-
-    if (form.password !== form.confirmPassword) {
-      startShakeAnimation(shakeAnimationValue);
-      setPasswordsMatch(false);
-      return;
-    }
-
-    try {
+    if (form.password === form.confirmPassword) {
       const { data, error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
       });
 
       if (error) {
-        startShakeAnimation(shakeAnimationValue);
         setIsError(error.message);
         setIsSignedUp(false);
       } else {
         setIsSignedUp(true);
       }
-    } catch (error) {
+    } else {
+      setPasswordsMatch(false);
     }
-  };
-
-  const shakeAnimationStyle = {
-    transform: [
-      {
-        translateX: shakeAnimationValue.interpolate({
-          inputRange: [-1, 0, 1],
-          outputRange: [-5, 0, 5],
-        }),
-      },
-    ],
   };
 
   return (
@@ -95,10 +74,10 @@ export const SignUp = ({ navigation }) => {
                 Check your email for an account verification email, and then
                 sign in!
               </Text>
-              <Text style={styles.sloganText}>(it might be in your spam)</Text>
               <View style={styles.verifyFormAction}>
                 <TouchableOpacity
                   onPress={() => {
+                    // handle onPress
                     navigation.navigate("SignIn");
                   }}
                 >
@@ -111,21 +90,15 @@ export const SignUp = ({ navigation }) => {
           </>
         ) : (
           <View style={styles.container}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <Text style={styles.backButtonText}>←</Text>
-            </TouchableOpacity>
             <View style={styles.header}>
+              {/*<Image source={logo} style={styles.headerImage} alt="Logo " />*/}
               <Text style={styles.titleText}>Create an Account!</Text>
             </View>
 
             <View style={styles.form}>
               <View style={styles.input}>
                 <Text style={styles.inputHeader}>
-                  Enter your Email Address:
+                  Enter your email address:
                 </Text>
                 <TextInput
                   style={styles.inputControl}
@@ -167,7 +140,7 @@ export const SignUp = ({ navigation }) => {
               </View>
 
               {passwordsMatch == false && (
-                <Animated.Text style={[styles.errorText, shakeAnimationStyle]}>
+                <Animated.Text style={[styles.errorText]}>
                   Passwords Do Not Match
                 </Animated.Text>
               )}
@@ -226,19 +199,16 @@ const styles = StyleSheet.create({
   header: {
     flex: 0,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "left",
     gap: "10%",
-    marginTop: "5%",
-    marginBottom: "10%",
+    marginBottom: "20%",
     //padding: "0%",
   },
 
   verifyHeader: {
     flex: 0,
     flexDirection: "row",
-    alignItems: "center",
-    //alignSelf: "center",
+    justifyContent: "left",
     gap: "10%",
     marginBottom: "10%",
     //padding: "0%",
@@ -247,6 +217,7 @@ const styles = StyleSheet.create({
   headerImage: {
     width: 40,
     height: 40,
+    //alignSelf: "center",
     marginBottom: 0,
   },
 
@@ -254,10 +225,10 @@ const styles = StyleSheet.create({
     fontFamily: "Verdana-Bold",
     fontSize: 27,
     fontWeight: "700",
-
-    //textAlign: "center",
+    textAlign: "center",
     //AlignSelf: "center",
     color: "#fff",
+    paddingTop: 5,
   },
 
   sloganText: {
@@ -341,12 +312,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 10,
-  },
-
-  backButtonText: {
-    fontSize: 30,
-    color: "#149999",
-    zIndex: 1,
   },
 });
 
