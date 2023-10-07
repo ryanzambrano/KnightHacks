@@ -14,8 +14,6 @@ import { supabase } from "./auth/supabase";
 import { decode } from "base64-arraybuffer";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
-import { createTimestamp } from "./profileUtils.js";
-import { router } from "websocket";
 import { useNavigation } from "@react-navigation/native";
 import { Dropdown } from "react-native-element-dropdown";
 
@@ -105,7 +103,6 @@ const AddClothingItem = ({ route }) => {
         .upload(filename, buffer, {
           contentType: "image/jpeg",
         });
-      createTimestamp(session.user.id, timestamp);
       if (uploadError) {
         alert(uploadError.message);
         return;
@@ -120,7 +117,6 @@ const AddClothingItem = ({ route }) => {
           fit: selectedFit,
           material: selectedMaterial,
           setting: selectedSetting,
-          // ... add other fields as necessary
         },
       ]);
 

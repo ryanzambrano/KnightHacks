@@ -10,10 +10,12 @@ import {
 } from "react-native";
 import { supabase } from "./auth/supabase";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useIsFocused } from "@react-navigation/native";
 
 const ClosetUI = ({ route }) => {
   const { session } = route.params;
   const [photos, setPhotos] = useState([]);
+  const isFocused = useIsFocused();
 
   const deletePictures = async (lastModified) => {
     try {
@@ -78,7 +80,10 @@ const ClosetUI = ({ route }) => {
 
   useEffect(() => {
     fetchPhotoTimestampsFromDatabase();
-  }, []);
+    if (isFocused) {
+      fetchPhotoTimestampsFromDatabase();
+    }
+  }, [isFocused]);
 
   const renderDelete = (lastModified) => (
     <TouchableOpacity
@@ -96,6 +101,7 @@ const ClosetUI = ({ route }) => {
       <Text style={styles.mainHeader}>My Closet</Text>
       <FlatList
         data={photos}
+        extraData={photos}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={styles.imageContainer}>
