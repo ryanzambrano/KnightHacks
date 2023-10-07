@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { supabase } from "./auth/supabase";
@@ -15,7 +16,18 @@ import { useIsFocused } from "@react-navigation/native";
 const ClosetUI = ({ route }) => {
   const { session } = route.params;
   const [photos, setPhotos] = useState([]);
+
   const isFocused = useIsFocused();
+
+  const [hats, setHats] = useState([]);
+  const [shirts, setShirts] = useState([]);
+  const [pants, setPants] = useState([]);
+  const [shoes, setShoes] = useState([]);
+  const [accessories, setAccessories] = useState([]);
+
+// ... You can add more state variables for other clothing types if necessary
+
+
 
   const deletePictures = async (lastModified) => {
     try {
@@ -49,6 +61,8 @@ const ClosetUI = ({ route }) => {
       alert(error.message);
     }
   };
+
+
   const fetchPhotoTimestampsFromDatabase = async () => {
     if (!session || !session.user) {
       console.error("No active session found.");
@@ -58,7 +72,7 @@ const ClosetUI = ({ route }) => {
     // Fetch last_modified timestamps for the user's images from the table
     const { data, error } = await supabase
       .from("user_images")
-      .select("last_modified")
+      .select("*")
       .eq("user_id", session.user.id);
 
     if (data) {
@@ -73,9 +87,25 @@ const ClosetUI = ({ route }) => {
       setPhotos(enrichedData);
 
       console.log(enrichedData.url); // Store the entire data array
-    } else {
+    
+      const hatsData = enrichedData.filter(photo => photo.clothing_type === "hat");
+      const shirtsData = enrichedData.filter(photo => photo.clothing_type === "shirt");
+      const pantsData = enrichedData.filter(photo => photo.clothing_type === "pants");
+      const shoesData = enrichedData.filter(photo => photo.clothing_type === "shoes");
+      const accessoriesData = enrichedData.filter(photo => photo.clothing_type === "accessories");
+      
+    setHats(hatsData);
+    setShirts(shirtsData);
+    setPants(pantsData);
+    setShoes(shoesData);
+    setAccessories(accessoriesData);
+    } 
+    
+    else {
       console.error("Failed to fetch image metadata from database:", error);
     }
+
+
   };
 
   useEffect(() => {
@@ -96,10 +126,13 @@ const ClosetUI = ({ route }) => {
       <Icon name="times" size={25} color="grey" />
     </TouchableOpacity>
   );
+
+  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.mainHeader}>My Closet</Text>
-      <FlatList
+      {/* <FlatList
         data={photos}
         extraData={photos}
         keyExtractor={(item, index) => index.toString()}
@@ -113,7 +146,98 @@ const ClosetUI = ({ route }) => {
             />
           </View>
         )}
-      />
+      /> */}
+      <ScrollView>
+      <View>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Hats</Text>
+        <FlatList
+          data={hats}
+          extraData={photos}
+
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "hat_" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              {renderDelete(item.last_modified)}
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+
+      <View>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shirts</Text>
+        <FlatList
+          data={shirts}
+          extraData={photos}
+
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "shirt_" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              {renderDelete(item.last_modified)}
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+
+      <View>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Pants / Shorts</Text>
+        <FlatList
+          data={pants}
+          extraData={photos}
+
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "pants_" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              {renderDelete(item.last_modified)}
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+
+      <View>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shoes</Text>
+        <FlatList
+          data={shoes}
+          extraData={photos}
+
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "shoes_" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              {renderDelete(item.last_modified)}
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+
+      <View>
+        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Accessories</Text>
+        <FlatList
+          data={accessories}
+          extraData={photos}
+
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "accessories" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              {renderDelete(item.last_modified)}
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+</ScrollView>
     </SafeAreaView>
   );
 };
@@ -132,11 +256,21 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 225,
+    width: 200,
     resizeMode: "cover",
     marginVertical: 10,
+    borderRadius: 15,
   },
-  // ... other styles
+  imageContainer: {
+    //width: '300%',          
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    margin: 10,
+    borderRadius: 15,
+  },
+  
 });
 
 export default ClosetUI;

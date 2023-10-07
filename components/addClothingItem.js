@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { TextInput } from "react-native";
+
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "./auth/supabase";
 import { decode } from "base64-arraybuffer";
@@ -21,35 +23,75 @@ import { Dropdown } from "react-native-element-dropdown";
 
 const clothingTypeOptions = [
   { label: "Hat", value: "hat" },
+  { label: "Jacket / Suit:", value: "jacket / suit" },
   { label: "Shirt", value: "shirt" },
   { label: "Pants", value: "pants" },
   { label: "Shoes", value: "shoes" },
-  // Add other colors...
+  { label: "Accessory", value: "accessory" },
 ];
 
 const colorOptions = [
-  { label: "Red", value: "red" },
+  { label: "Black", value: "black" },
   { label: "Blue", value: "blue" },
-  // Add other colors...
+  { label: "Brown", value: "brown" },
+  { label: "Green", value: "green" },
+  { label: "Grey", value: "grey" },  
+  { label: "Orange", value: "orange" },
+  { label: "Pink", value: "pink" },
+  { label: "Purple", value: "purple" },
+  { label: "Red", value: "red" },
+  { label: "White", value: "white" },
+  { label: "Cream", value: "cream" },
+  { label: "Yellow", value: "yellow" },
+  { label: "Violet", value: "violet" },
 ];
+
 
 const fitOptions = [
   { label: "Loose", value: "loose" },
   { label: "Tight", value: "tight" },
-  // ... other fits
+  { label: "Regular", value: "regular" },
+  { label: "Slim", value: "slim" },
+  { label: "Relaxed", value: "relaxed" },
+  { label: "Baggy", value: "baggy" },
+  { label: "Fitted", value: "fitted" },
+  { label: "Oversized", value: "oversized" },
+  { label: "Tailored", value: "tailored" },
+  { label: "Stretch", value: "stretch" }
 ];
 
 const materialOptions = [
   { label: "Cotton", value: "cotton" },
   { label: "Polyester", value: "polyester" },
-  // ... other materials
+  { label: "Silk", value: "silk" },
+  { label: "Denim", value: "denim" },
+  { label: "Wool", value: "wool" },
+  { label: "Linen", value: "linen" },
+  { label: "Leather", value: "leather" },
+  { label: "Suede", value: "suede" },
+  { label: "Rayon", value: "rayon" },
+  { label: "Spandex", value: "spandex" },
+  { label: "Nylon", value: "nylon" },
+  { label: "Velvet", value: "velvet" },
+  { label: "Cashmere", value: "cashmere" }
 ];
 
 const settingOptions = [
   { label: "Casual", value: "casual" },
   { label: "Formal", value: "formal" },
-  // ... other types
+  { label: "Fashion", value: "fashion" },
+  { label: "Business Casual", value: "business_casual" },
+  { label: "Athletic", value: "athletic" },
+  { label: "Party", value: "party" },
+  { label: "Outdoor", value: "outdoor" },
+  { label: "Beach", value: "beach" },
+  { label: "Lounge", value: "lounge" },
+  { label: "Night Out", value: "night_out" },
+  { label: "Travel", value: "travel" },
+  { label: "Festival", value: "festival" },
+  { label: "Wedding", value: "wedding" }
 ];
+
 
 const AddClothingItem = ({ route }) => {
   const navigation = useNavigation();
@@ -58,10 +100,12 @@ const AddClothingItem = ({ route }) => {
   const [selectedFit, setSelectedFit] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const [clothingName, setClothingName] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   // New state variable
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  
 
   const handleImageSelection = async () => {
     // Just the selection process
@@ -117,6 +161,8 @@ const AddClothingItem = ({ route }) => {
           fit: selectedFit,
           material: selectedMaterial,
           setting: selectedSetting,
+          name: clothingName,
+          
         },
       ]);
 
@@ -150,6 +196,21 @@ const AddClothingItem = ({ route }) => {
             )}
           </TouchableOpacity>
 
+          <Text style={{ fontSize: 20,
+            fontWeight: "500",
+            color: "white",
+            marginRight: 8,
+            flexShrink: 1,}} alignSelf={"center"} paddingTop={20} >Name:</Text>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Name of Clothing"
+            placeholderTextColor="#A5A5A5"
+            fontSize={15}
+            value={clothingName}
+            onChangeText={setClothingName}
+          />
+
+          
           <View style={styles.filterContainer}>
             <Text style={styles.filterLabel}>Type of Clothing:</Text>
             <Dropdown
@@ -280,9 +341,11 @@ const AddClothingItem = ({ route }) => {
               }}
             />
           </View>
-          {selectedImage && (
-            <Button title="Add Piece" onPress={handleImageUpload} />
-          )}
+          
+          <TouchableOpacity style={styles.addButton} onPress={handleImageUpload}>
+            <Text style={styles.addButtonText}>Add Piece</Text>
+          </TouchableOpacity>
+
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -388,6 +451,36 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: -10,
   },
+  textInput: {
+    borderColor: "#A5A5A5",
+    //borderWidth: 1,
+    borderRadius: 8,
+    height: 40,
+    width: '90%',
+    color: "white",
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    marginTop: 15,
+    marginBottom: 20,
+    alignSelf: "center",
+    width: "85%",
+    backgroundColor: "#2D2D30",
+  },
+  addButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    //marginBottom: 40,
+    marginHorizontal: 140,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10, // or any margin if needed
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: 'bold'
+  }
+  
 });
 
 export default AddClothingItem;
