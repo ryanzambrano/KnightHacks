@@ -54,6 +54,17 @@ export const SignUp = ({ navigation }) => {
     }
   };
 
+  const shakeAnimationStyle = {
+    transform: [
+      {
+        translateX: shakeAnimationValue.interpolate({
+          inputRange: [-1, 0, 1],
+          outputRange: [-5, 0, 5],
+        }),
+      },
+    ],
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#111111" }}>
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
