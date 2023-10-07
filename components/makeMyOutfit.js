@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import OpenAI from "openai";
 
@@ -9,6 +9,7 @@ const MakeMyOutfitUI = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [translatedResponse, setTranslatedResponse] = useState('');
+  
   const apiKey = ''; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey
@@ -74,6 +75,7 @@ const MakeMyOutfitUI = ({ route }) => {
   };
 
   return (
+    <SafeAreaView style={{flex: 1, backgroundColor: "#1D1D20", marginBottom: 80,}}>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
@@ -103,13 +105,16 @@ const MakeMyOutfitUI = ({ route }) => {
         <TextInput
           style={styles.input}
           value={message}
+          marginBottom={0}
+          keyboardAppearance='dark'
           onChangeText={(text) => setMessage(text)}
           placeholder="Type a message..."
           placeholderTextColor="#888"
         />
-        <Button title="Send" onPress={sendMessage} color="#007AFF" />
+        <Button title="Send" onPress={sendMessage} color="#cd9625" />
       </View>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: '#1D1D20',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   header: {
     flexDirection: 'row',
@@ -136,7 +141,7 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     borderRadius: 20,
-    paddingBottom: 10,
+    paddingVertical: 10,
     padding: 15,
     marginBottom: 15,
     
@@ -157,20 +162,20 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 20,
+    backgroundColor: '#2B2D2F',
+    borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginBottom: 100,
+    marginBottom: 20,
   },
   input: {
     flex: 1,
     height: 40,
     marginRight: 10,
-    color: '#333',
+    color: 'white',
     borderRadius: 20,
     paddingHorizontal: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#2B2D2F",
   },
 
   //#cd9625

@@ -144,7 +144,7 @@ const ClosetUI = ({ route, navigation }) => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "white",
-              paddingVertical: 5,
+              paddingVertical: 10,
             }}
           >
             Hats
@@ -185,7 +185,7 @@ const ClosetUI = ({ route, navigation }) => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "white",
-              paddingVertical: 5,
+              paddingVertical: 10,
             }}
           >
             Shirts
@@ -226,7 +226,7 @@ const ClosetUI = ({ route, navigation }) => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "white",
-              paddingVertical: 5,
+              paddingVertical: 10,
             }}
           >
             Pants / Shorts
@@ -250,7 +250,7 @@ const ClosetUI = ({ route, navigation }) => {
                   style={{
                     fontWeight: "600",
                     color: "white",
-                    paddingVertical: 5,
+                    paddingVertical: 15,
                   }}
                 >
                   "{item.name}"
@@ -267,7 +267,7 @@ const ClosetUI = ({ route, navigation }) => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "white",
-              paddingVertical: 5,
+              paddingVertical: 10,
             }}
           >
             Shoes
@@ -308,7 +308,7 @@ const ClosetUI = ({ route, navigation }) => {
               fontWeight: "bold",
               paddingLeft: 10,
               color: "white",
-              paddingVertical: 5,
+              paddingVertical: 10,
             }}
           >
             Accessories
@@ -374,6 +374,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    paddingTop: 5,
+    backgroundColor: "#2B2D2F",
   },
 });
 

@@ -196,7 +196,7 @@ const ClothingItem = ({ route }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Name of Clothing"
-            placeholderTextColor="#A5A5A5"
+            placeholderTextColor="white"
             fontSize={15}
             value={clothingName}
             onChangeText={setClothingName}
@@ -218,6 +218,7 @@ const ClothingItem = ({ route }) => {
               autoScroll={false}
               showsVerticalScrollIndicator={false}
               activeColor="#2D2D30"
+              placeholderStyle={{ color: "white" }}
               value={selectedType}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
@@ -243,6 +244,7 @@ const ClothingItem = ({ route }) => {
               itemContainerStyle={styles.listContainer}
               containerStyle={styles.border}
               autoScroll={false}
+              placeholderStyle={{ color: "white" }}
               showsVerticalScrollIndicator={false}
               activeColor="#2D2D30"
               value={selectedColor}
@@ -269,6 +271,7 @@ const ClothingItem = ({ route }) => {
               itemContainerStyle={styles.listContainer}
               containerStyle={styles.border}
               autoScroll={false}
+              placeholderStyle={{ color: "white" }}
               showsVerticalScrollIndicator={false}
               activeColor="#2D2D30"
               onFocus={() => setIsFocus(true)}
@@ -295,6 +298,7 @@ const ClothingItem = ({ route }) => {
               itemContainerStyle={styles.listContainer}
               containerStyle={styles.border}
               autoScroll={false}
+              placeholderStyle={{ color: "white" }}
               showsVerticalScrollIndicator={false}
               activeColor="#2D2D30"
               value={selectedMaterial}
@@ -316,6 +320,7 @@ const ClothingItem = ({ route }) => {
               maxHeight={300}
               labelField="label"
               valueField="value"
+              placeholderStyle={{ color: "white" }}
               selectedTextStyle={styles.placeholderText}
               itemTextStyle={styles.placeholderText}
               itemContainerStyle={styles.listContainer}
@@ -365,7 +370,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginVertical: 10,
+    marginTop: 10,
+    marginBottom: 25,
   },
   verticalScroll: {
     paddingHorizontal: 10,
@@ -378,10 +384,10 @@ const styles = StyleSheet.create({
   },
 
   headerContainer: {
-    paddingBottom: 60,
+    paddingBottom: 0,
   },
   scrollview: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   item: {
     marginRight: 10,
@@ -471,7 +477,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2D2D30",
   },
   addButton: {
-    backgroundColor: "green",
+    backgroundColor: "#cd9625",
     padding: 10,
     //marginBottom: 40,
     //marginHorizontal: 140,
@@ -493,6 +499,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10, // or any margin if needed
+    
   },
 });
 
