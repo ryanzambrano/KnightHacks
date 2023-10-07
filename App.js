@@ -4,10 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { supabase } from "./components/auth/supabase.js";
 //import { logo } from "./logo.png";
-
 import Authentication from "./components/auth/authentication.js";
-import Questionaire from "./components/questionaire.js";
-import TwoMainPages from "./components/miscellaneous/ThreeMainPages.js";
+import Questionaire from "./components/auth/questionaire.js";
+//import TwoMainPages from "./components/miscellaneous/TwoMainPages.js";
 
 const Stack = createStackNavigator(); // Creating a stack is important for navigation. Must initialize the stack with creatStackNavigator().
 

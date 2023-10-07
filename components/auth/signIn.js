@@ -13,7 +13,6 @@ import {
   Keyboard,
 } from "react-native";
 import { supabase } from "./supabase.js";
-import { startShakeAnimation } from "./profileUtils.js";
 
 export const SignIn = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
@@ -72,7 +71,7 @@ export const SignIn = ({ navigation }) => {
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Image source={logo} style={styles.headerImage} alt="Logo " />
+            {/*<Image source={logo} style={styles.headerImage} alt="Logo " />*/}
             <Text style={styles.titleText}>Sign into Outfitme</Text>
             <Text style={styles.sloganText}>
               create absolutely BANGIN outfits!
