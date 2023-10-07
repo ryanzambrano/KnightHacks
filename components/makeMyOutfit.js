@@ -18,63 +18,12 @@ import { createTimestamp } from "./profileUtils.js";
 import { router } from "websocket";
 
 const MakeMyOutfitUI = ({ route }) => {
-  const { session } = route.params;
-  const handleImageUpload = async (index) => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
-    }
-
-    try {
-      const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        base64: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-
-      if (!imagePickerResult.canceled) {
-        const timestamp = new Date().toISOString();
-
-        //deletePictures(index);
-        const filename = `${session.user.id}/${session.user.id}-${timestamp}`;
-
-        const compressedImage = await manipulateAsync(
-          imagePickerResult.assets[0].uri,
-          [], // No transforms
-          { compress: 0.2, format: "jpeg", base64: true }
-        );
-        //compressedUri = compressedImage.uri;
-        const buffer = decode(compressedImage.base64);
-
-        const { data, error: uploadError } = await supabase.storage
-          .from("user_pictures")
-          .upload(filename, buffer, {
-            contentType: "image/jpeg",
-          });
-
-        createTimestamp(session.user.id, timestamp);
-
-        if (uploadError) {
-          alert(uploadError.message);
-        } else {
-          alert("uploaded successfully");
-        }
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
         <Text style={styles.mainHeader}>My Closet</Text>
-        <TouchableOpacity style={styles.addButton} onPress={handleImageUpload}>
-          <Ionicons name="add-circle" size={30} color="white" />
-        </TouchableOpacity>
+      
       </View>
     </SafeAreaView>
   );

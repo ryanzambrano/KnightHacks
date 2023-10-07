@@ -5,7 +5,6 @@ const ClosetUI = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.mainHeader}>My Closet</Text>
-      {/* ... add more shoes as needed */}
     </SafeAreaView>
   );
 };
