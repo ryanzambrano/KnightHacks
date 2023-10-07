@@ -68,7 +68,9 @@ const ClosetUI = ({ route }) => {
         url: `${base_url}/${session.user.id}/${session.user.id}-${image.last_modified}`,
       }));
 
-      setPhotos(enrichedData); // Store the entire data array
+      setPhotos(enrichedData);
+
+      console.log(enrichedData.url); // Store the entire data array
     } else {
       console.error("Failed to fetch image metadata from database:", error);
     }
