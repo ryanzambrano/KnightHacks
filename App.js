@@ -1,13 +1,12 @@
-import "react-native-url-polyfill/auto";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { supabase } from "./components/auth/supabase.js";
-import { logo } from "./logo.png";
+//import { logo } from "./logo.png";
 
 import Authentication from "./components/auth/authentication.js";
-import Questionaire from "./components/questionairefiles/questionaire.js";
+import Questionaire from "./components/questionaire.js";
 import TwoMainPages from "./components/miscellaneous/ThreeMainPages.js";
 
 const Stack = createStackNavigator(); // Creating a stack is important for navigation. Must initialize the stack with creatStackNavigator().
@@ -79,7 +78,7 @@ const App = () => {
     // Render a loading state or splash screen
     return (
       <View style={styles.container}>
-        <Image source={logo} style={styles.headerImage} alt="Logo " />
+        {/*<Image source={} style={styles.headerImage} alt="Logo " />*/}
       </View>
     );
   }
