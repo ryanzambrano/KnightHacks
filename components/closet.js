@@ -163,7 +163,7 @@ const ClosetUI = ({ route, navigation }) => {
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>{" "}
+                </TouchableOpacity>
                 <Text
                   style={{
                     fontWeight: "600",
@@ -204,7 +204,7 @@ const ClosetUI = ({ route, navigation }) => {
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>{" "}
+                </TouchableOpacity>
                 <Text
                   style={{
                     fontWeight: "600",
@@ -245,7 +245,7 @@ const ClosetUI = ({ route, navigation }) => {
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>{" "}
+                </TouchableOpacity>
                 <Text
                   style={{
                     fontWeight: "600",
@@ -286,7 +286,7 @@ const ClosetUI = ({ route, navigation }) => {
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>{" "}
+                </TouchableOpacity>
                 <Text
                   style={{
                     fontWeight: "600",
