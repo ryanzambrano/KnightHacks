@@ -1,64 +1,161 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Image,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { supabase } from "./auth/supabase";
-import { decode } from "base64-arraybuffer";
-import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
-import { Ionicons } from "@expo/vector-icons";
-import { createTimestamp } from "./profileUtils.js";
-import { router } from "websocket";
+import React, { useState } from 'react';
+import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import axios from 'axios';
 
 const MakeMyOutfitUI = ({ route }) => {
+  const { session } = route.params;
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [translatedResponse, setTranslatedResponse] = useState('');
+  const apiKey = ''; // Replace with your actual API key
+
+  const translateText = async (textToTranslate) => {
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/engines/text-davinci-003/completions',
+        {
+          prompt: textToTranslate,
+          max_tokens: 100,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      );
   
+      // Extract the translated text from the response
+      const translated = response.data.choices[0].text.trimStart();
+      setTranslatedResponse(translated);
+     // console.log(response.data.choices[0].text.trimStart());
+  
+      return translated; // Return the translated text
+    } catch (error) {
+      console.error('Error translating text:', error);
+      throw error; // Rethrow the error for handling in sendMessage
+    }
+  };
+  const sendMessage = async () => {
+    if (message.trim() !== '') {
+      // Set the user's message immediately
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, user: true },
+      ]);
+      setMessage('');
+  
+      // Always call the translation function
+      try {
+        const translatedText = await translateText(message);
+        // Update the translated message in the state
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: translatedText, user: false },
+        ]);
+      } catch (error) {
+        console.error('Error translating text:', error);
+      }
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.mainHeader}>Make my Outfit</Text>
-      
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+    >
+      <View style={styles.header}></View>
+      <View style={styles.messagesContainer}>
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.messageContainer,
+                item.user ? styles.userMessage : styles.translatedMessage, // Apply different styles based on whether it's a user message or a translated message
+              ]}
+            >
+              <Text style={styles.message}>{item.text}</Text>
+            </View>
+          )}
+          keyExtractor={(_, index) => index.toString()}
+          contentContainerStyle={styles.messagesContent}
+        />
       </View>
-    </SafeAreaView>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={message}
+          onChangeText={(text) => setMessage(text)}
+          placeholder="Type a message..."
+          placeholderTextColor="#888"
+        />
+        <Button title="Send" onPress={sendMessage} color="#007AFF" />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
-    backgroundColor: "#1D1D20",
-  },
-  mainHeader: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "white",
-    marginVertical: 10,
-  },
-  verticalScroll: {
-    paddingHorizontal: 10,
+    padding: 10,
+    backgroundColor: 'grey',
+    marginBottom: 10,
   },
   header: {
-    fontSize: 20,
-    color: "white",
-    fontWeight: "bold",
-    marginVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
-  scrollview: {
-    marginBottom: 20,
+  messagesContainer: {
+    flex: 1,
   },
-  item: {
-    marginRight: 10,
+  messagesContent: {
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  messageContainer: {
+    borderRadius: 20,
+    paddingBottom: 10,
     padding: 15,
-    backgroundColor: "#e5e5e5",
-    borderRadius: 8,
+    marginBottom: 15,
+    
+    maxWidth: '70%', // Limit the width of message containers
+  },
+  userMessage: {
+    backgroundColor: '#dedede',
+    alignSelf: 'flex-end',
+  },
+  translatedMessage: {
+    backgroundColor: '#007AFF',
+    alignSelf: 'flex-start',
+  },
+  message: {
+    fontSize: 16,
+    color: '#000',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 100,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    marginRight: 10,
+    color: '#333',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    backgroundColor: '#FFF',
   },
 });
-
 export default MakeMyOutfitUI;

@@ -17,9 +17,11 @@ import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import { Ionicons } from "@expo/vector-icons";
 import { createTimestamp } from "./profileUtils.js";
 import { router } from "websocket";
+import { useNavigation } from "@react-navigation/native";
 
-const AddClothingItem = (route) => {
- 
+const AddClothingItem = ({ route }) => {
+    const navigation = useNavigation();
+    const { session } = route.params;
     const handleImageUpload = async (index) => {
       const permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -70,15 +72,15 @@ const AddClothingItem = (route) => {
       }
     };
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.mainHeader}>My Closet</Text>
-          <TouchableOpacity style={styles.addButton} onPress={handleImageUpload}>
-            <Ionicons name="add-circle" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.mainHeader}>Add Clothing Item</Text>
+            <TouchableOpacity style={styles.imageBox} onPress={handleImageUpload}>
+              <Text style={styles.addText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      );
   };
   
   const styles = StyleSheet.create({
@@ -111,6 +113,20 @@ const AddClothingItem = (route) => {
       backgroundColor: "#e5e5e5",
       borderRadius: 8,
     },
+    imageBox: {
+        width: '85%',
+        height: 325,
+        backgroundColor: 'white',
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        alignSelf: 'center',
+      },
+      addText: {
+        fontSize: 50,
+        color: '#1D1D20',
+      },
   });
 
 export default AddClothingItem;

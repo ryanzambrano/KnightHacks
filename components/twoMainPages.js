@@ -87,6 +87,7 @@ const TabNavigator = ({ route }) => {
     <Tab.Screen
         name="Add"   
         component={AddClothingItem}
+        initialParams={{ session }}
         options={{     
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
