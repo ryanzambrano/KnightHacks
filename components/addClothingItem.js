@@ -211,7 +211,7 @@ const AddClothingItem = ({ route }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Name of Clothing"
-            placeholderTextColor="#A5A5A5"
+            placeholderTextColor="white"
             fontSize={15}
             value={clothingName}
             onChangeText={setClothingName}
@@ -223,7 +223,9 @@ const AddClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={clothingTypeOptions}
               placeholder="Select Clothing Type"
+              placeholderTextColor="white"
               maxHeight={300}
+              placeholderStyle={{ color: "white" }}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -250,6 +252,7 @@ const AddClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={colorOptions}
               placeholder="Select Fit"
+              placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
               valueField="value"
@@ -276,6 +279,7 @@ const AddClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={fitOptions}
               placeholder="Select Color"
+              placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
               valueField="value"
@@ -302,6 +306,7 @@ const AddClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={materialOptions}
               placeholder="Select Material"
+              placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
               valueField="value"
@@ -328,6 +333,7 @@ const AddClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={settingOptions}
               placeholder="Select Setting"
+              placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
               valueField="value"
@@ -365,11 +371,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#1D1D20",
   },
   mainHeader: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginVertical: 10,
+    marginTop: 10,
+    marginBottom: 20,
   },
   verticalScroll: {
     paddingHorizontal: 10,
@@ -383,6 +390,7 @@ const styles = StyleSheet.create({
 
   headerContainer: {
     paddingBottom: 60,
+    marginBottom: -50,
   },
   scrollview: {
     marginBottom: 20,
@@ -396,7 +404,7 @@ const styles = StyleSheet.create({
   imageBox: {
     width: "85%",
     height: 325,
-    backgroundColor: "white",
+    backgroundColor: "lightgrey",
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
@@ -475,9 +483,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#2D2D30",
   },
   addButton: {
-    backgroundColor: "green",
+    backgroundColor: "#cd9625",
     padding: 10,
-    //marginBottom: 40,
+    marginBottom: 70,
     marginHorizontal: 140,
     borderRadius: 5,
     alignItems: "center",

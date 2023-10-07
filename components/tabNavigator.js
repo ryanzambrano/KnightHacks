@@ -45,8 +45,8 @@ const TabNavigator = ({ route }) => {
         tabBarStyle: {
           position: "absolute",
           bottom: -10,
-
           elevation: 0,
+          paddingHorizontal: 5,
           backgroundColor: "#111111",
           borderRadius: 5,
           height: 100,

@@ -12,6 +12,7 @@ import {
 import { supabase } from "./auth/supabase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const ClosetUI = ({ route, navigation }) => {
   const { session } = route.params;
@@ -27,6 +28,7 @@ const ClosetUI = ({ route, navigation }) => {
 
   // ... You can add more state variables for other clothing types if necessary
 
+  // ... You can add more state variables for other clothing types if necessa
   const deletePictures = async (lastModified) => {
     try {
       const filename = `${session.user.id}/${session.user.id}-${lastModified}`;
@@ -133,9 +135,20 @@ const ClosetUI = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.mainHeader}>My Closet</Text>
-      <ScrollView>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hats</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
+            Hats
+          </Text>
           <FlatList
             data={hats}
             extraData={photos}
@@ -144,21 +157,39 @@ const ClosetUI = ({ route, navigation }) => {
             keyExtractor={(item, index) => "hat_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
-                {renderDelete(item.last_modified)}
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClothingItem", { item });
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity>{" "}
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
               </View>
             )}
           />
         </View>
 
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Shirts</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
+            Shirts
+          </Text>
           <FlatList
             data={shirts}
             extraData={photos}
@@ -167,21 +198,37 @@ const ClosetUI = ({ route, navigation }) => {
             keyExtractor={(item, index) => "shirt_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
-                {renderDelete(item.last_modified)}
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClothingItem", { item });
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity>{" "}
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
               </View>
             )}
           />
         </View>
 
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
             Pants / Shorts
           </Text>
           <FlatList
@@ -192,21 +239,39 @@ const ClosetUI = ({ route, navigation }) => {
             keyExtractor={(item, index) => "pants_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
-                {renderDelete(item.last_modified)}
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClothingItem", { item });
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity>{" "}
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
               </View>
             )}
           />
         </View>
 
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Shoes</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
+            Shoes
+          </Text>
           <FlatList
             data={shoes}
             extraData={photos}
@@ -215,37 +280,64 @@ const ClosetUI = ({ route, navigation }) => {
             keyExtractor={(item, index) => "shoes_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
-                {renderDelete(item.last_modified)}
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClothingItem", { item });
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity>{" "}
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
               </View>
             )}
           />
         </View>
 
         <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Accessories</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 5,
+            }}
+          >
+            Accessories
+          </Text>
           <FlatList
             data={accessories}
             extraData={photos}
+            paddingBottom={100}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => "accessories" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
-                {renderDelete(item.last_modified)}
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClothingItem", { item });
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
+                </TouchableOpacity>{" "}
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
               </View>
             )}
           />
@@ -258,14 +350,15 @@ const ClosetUI = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1D1D20",
   },
   mainHeader: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-    color: "black",
-    marginVertical: 10,
+    color: "white",
+    marginBottom: 20,
+    marginTop: 10,
   },
   image: {
     width: 150,

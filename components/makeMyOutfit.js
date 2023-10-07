@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import axios from 'axios';
+import OpenAI from "openai";
 
 const MakeMyOutfitUI = ({ route }) => {
   const { session } = route.params;
@@ -9,35 +10,47 @@ const MakeMyOutfitUI = ({ route }) => {
   const [inputText, setInputText] = useState('');
   const [translatedResponse, setTranslatedResponse] = useState('');
   const apiKey = ''; // Replace with your actual API key
-
-  const translateText = async (textToTranslate) => {
+  const openai = new OpenAI({
+    apiKey
+  });
+  
+  const translateText = async (message) => {
     try {
-      const response = await axios.post(
-        'https://api.openai.com/v1/engines/text-davinci-003/completions',
-        {
-          prompt: textToTranslate,
-          max_tokens: 100,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            "role": "system",
+            "content": "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that based on what is in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event but give them an outfit with their wardrobe. It should be outputted in this exactly in this format so don't say anything before the outfit: \"\nOutfit: \nTop:\n Your x, \nBottom:  \nYour x, \nshoes: \nYour x\n\" If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \"enjoy your new drip!\""
           },
-        }
-      );
-  
-      // Extract the translated text from the response
-      const translated = response.data.choices[0].text.trimStart();
+          {
+            "role": "user",
+            "content": "My wardrobe include: \"Blue Dress shirt, White Polo shirt, Black Button-down shirt, Pink Blouse, Yellow Flannel shirt, Gray Henley shirt, Green Tank top, Blue Jeans, Black Slacks, Khaki Chinos, Brown Cargo pants, Gray Sweatpants, White Sneakers, Brown Loafers, Black Oxford shoes, Red High-top sneakers, Blue Running shoes, Purple V-neck sweater, Striped long-sleeve shirt, Floral-print blouse, Plaid flannel shirt, Orange graphic tee, Maroon polo shirt, Denim jacket, Gray turtleneck sweater, Olive cargo shorts, Camouflage joggers, White linen pants, Slim-fit gray trousers, Corduroy pants, Ripped skinny jeans, Leather biker pants, Black yoga leggings, High-heeled ankle boots, Canvas slip-on sneakers, Suede desert boots, Patent leather loafers, Hiking sandals, Classic Converse Chuck Taylors, Wingtip brogues, Athletic running shoes\""
+          },
+          {
+            "role": "user",
+            "content": message
+          }
+        ],
+        temperature: 1,
+        max_tokens: 738,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+      });
+      const translated = response.choices[0].message;
+      console.log(translated);
       setTranslatedResponse(translated);
-     // console.log(response.data.choices[0].text.trimStart());
-  
-      return translated; // Return the translated text
-    } catch (error) {
-      console.error('Error translating text:', error);
-      throw error; // Rethrow the error for handling in sendMessage
-    }
-  };
-  const sendMessage = async () => {
+      // console.log(response.data.choices[0].text.trimStart());
+   
+       return translated; // Return the translated text
+     } catch (error) {
+       console.error('Error translating text:', error);
+       throw error; // Rethrow the error for handling in sendMessage
+     }
+   };
+
+   const sendMessage = async () => {
     if (message.trim() !== '') {
       // Set the user's message immediately
       setMessages((prevMessages) => [
@@ -64,25 +77,27 @@ const MakeMyOutfitUI = ({ route }) => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
     >
       <View style={styles.header}></View>
       <View style={styles.messagesContainer}>
-        <FlatList
-          data={messages}
-          renderItem={({ item }) => (
-            <View
-              style={[
-                styles.messageContainer,
-                item.user ? styles.userMessage : styles.translatedMessage, // Apply different styles based on whether it's a user message or a translated message
-              ]}
-            >
-              <Text style={styles.message}>{item.text}</Text>
-            </View>
-          )}
-          keyExtractor={(_, index) => index.toString()}
-          contentContainerStyle={styles.messagesContent}
-        />
+      <FlatList
+  data={messages}
+  renderItem={({ item }) => (
+    <View
+      style={[
+        styles.messageContainer,
+        item.user ? styles.userMessage : styles.translatedMessage,
+      ]}
+    >
+      <Text style={styles.message}>
+        {item.user ? item.text : item.text.content}
+      </Text>
+    </View>
+  )}
+  keyExtractor={(_, index) => index.toString()}
+  contentContainerStyle={styles.messagesContent}
+/>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -102,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1D1D20',
     marginBottom: 10,
   },
   header: {
@@ -128,11 +143,11 @@ const styles = StyleSheet.create({
     maxWidth: '70%', // Limit the width of message containers
   },
   userMessage: {
-    backgroundColor: '#dedede',
+    backgroundColor: 'white',
     alignSelf: 'flex-end',
   },
   translatedMessage: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#cd9625',
     alignSelf: 'flex-start',
   },
   message: {
@@ -157,5 +172,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#FFF',
   },
+
+  //#cd9625
 });
 export default MakeMyOutfitUI;
