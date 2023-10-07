@@ -78,11 +78,12 @@ const TabNavigator = ({ route }) => {
         }
       })}
     >
-    <Tab.Screen
-      name="Closet"
-      component={ClosetUI}
-      initialParams={{ session }}
-    />
+      <Tab.Screen
+        name="MakeMyOutfit"
+        component={MakeMyOutfitUI}
+        initialParams={{ session }}
+      />
+    
     <Tab.Screen
         name="Add"   
         component={AddClothingItem}
@@ -101,12 +102,12 @@ const TabNavigator = ({ route }) => {
           
         }}
       />
-      <Tab.Screen
-        name="MakeMyOutfit"
-        component={MakeMyOutfitUI}
-        initialParams={{ session }}
-      />
-
+      
+<Tab.Screen
+      name="Closet"
+      component={ClosetUI}
+      initialParams={{ session }}
+    />
       
     </Tab.Navigator>
   );

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    color: "white",
+    color: "black",
     marginVertical: 10,
   },
   verticalScroll: {

@@ -22,7 +22,7 @@ const MakeMyOutfitUI = ({ route }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
-        <Text style={styles.mainHeader}>My Closet</Text>
+        <Text style={styles.mainHeader}>Make my Outfit</Text>
       
       </View>
     </SafeAreaView>
