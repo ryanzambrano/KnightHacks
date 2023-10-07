@@ -5,112 +5,36 @@ import { MaterialIcons, Foundation } from "@expo/vector-icons";
 
 import MakeMyOutfitUI from "./makeMyOutfit";
 import ClosetUI from "./closet";
-import AddClothingItem from "./addClothingItem";  // Assuming this exists
+import AddClothingItem from "./addClothingItem";
+import ClothingItem from "./clothingItem";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import TabNavigator from "./tabNavigator";
+const Stack = createStackNavigator();
+
+// Assuming this exists
+// Assuming this exists
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabBarButton = ({ children, onPress }) => (
-    <TouchableOpacity
-        style={{
-            top: -25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            ...styles.shadow
-        }}
-        onPress={onPress}
-    >
-        <View style={{
-            width: 50,
-            height: 50,
-            borderRadius: 35,
-            backgroundColor: '#00BFA6'
-        }}>
-            {children}
-        </View>
-    </TouchableOpacity>
-);
-
-const TabNavigator = ({ route }) => {
+const TwoMainPages = ({ route }) => {
   const { session } = route.params;
 
   return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          position: 'absolute',
-          bottom: -10,
-         
-          elevation: 0,
-          backgroundColor: "#111111",
-          borderRadius: 5,
-          height: 100,
-          // ...styles.shadow
-        },
-        tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === "MakeMyOutfit") {
-            return (
-              <MaterialIcons
-                name="chat-bubble-outline"
-                size={24}
-                color={focused ? "white" : "grey"}
-              />
-            );
-          } else if (route.name === "Closet") {
-            return (
-              <Foundation
-                name="home"
-                size={24}
-                color={focused ? "white" : "grey"}
-              />
-            );
-          } else if (route.name === "Add") {
-            return (
-              <MaterialIcons
-                name="add"
-                size={24}
-                color="white"
-              />
-            );
-          }
-        }
-      })}
-    >
-      <Tab.Screen
-        name="MakeMyOutfit"
-        component={MakeMyOutfitUI}
-        initialParams={{ session }}
-      />
-    
-    <Tab.Screen
-        name="Add"   
-        component={AddClothingItem}
-        initialParams={{ session }}
-        options={{     
-          tabBarIcon: ({ focused }) => (
-            <MaterialIcons
-              name="add"
-              size={24}
-              color="#FFF"
-            />
-    
-          ),
-          tabBarButton: (props) => (
-            <CustomTabBarButton {...props} />
-          )
-          
-        }}
-      />
-      
-<Tab.Screen
-      name="Closet"
-      component={ClosetUI}
-      initialParams={{ session }}
-    />
-      
-    </Tab.Navigator>
+    <NavigationContainer independent={true}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="TabNavigator"
+          component={TabNavigator}
+          initialParams={{ session }}
+        />
+        <Stack.Screen
+          name="ClothingItem"
+          component={ClothingItem}
+          initialParams={{ session }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -125,6 +49,6 @@ const styles = StyleSheet.create({
   //   shadowRadius: 3.5,
   //   elevation: 5
   // }
-})
+});
 
-export default TabNavigator;
+export default TwoMainPages;

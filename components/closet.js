@@ -13,7 +13,7 @@ import { supabase } from "./auth/supabase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
 
-const ClosetUI = ({ route }) => {
+const ClosetUI = ({ route, navigation }) => {
   const { session } = route.params;
   const [photos, setPhotos] = useState([]);
 
@@ -25,9 +25,7 @@ const ClosetUI = ({ route }) => {
   const [shoes, setShoes] = useState([]);
   const [accessories, setAccessories] = useState([]);
 
-// ... You can add more state variables for other clothing types if necessary
-
-
+  // ... You can add more state variables for other clothing types if necessary
 
   const deletePictures = async (lastModified) => {
     try {
@@ -62,7 +60,6 @@ const ClosetUI = ({ route }) => {
     }
   };
 
-
   const fetchPhotoTimestampsFromDatabase = async () => {
     if (!session || !session.user) {
       console.error("No active session found.");
@@ -87,25 +84,31 @@ const ClosetUI = ({ route }) => {
       setPhotos(enrichedData);
 
       console.log(enrichedData.url); // Store the entire data array
-    
-      const hatsData = enrichedData.filter(photo => photo.clothing_type === "hat");
-      const shirtsData = enrichedData.filter(photo => photo.clothing_type === "shirt");
-      const pantsData = enrichedData.filter(photo => photo.clothing_type === "pants");
-      const shoesData = enrichedData.filter(photo => photo.clothing_type === "shoes");
-      const accessoriesData = enrichedData.filter(photo => photo.clothing_type === "accessories");
-      
-    setHats(hatsData);
-    setShirts(shirtsData);
-    setPants(pantsData);
-    setShoes(shoesData);
-    setAccessories(accessoriesData);
-    } 
-    
-    else {
+
+      const hatsData = enrichedData.filter(
+        (photo) => photo.clothing_type === "hat"
+      );
+      const shirtsData = enrichedData.filter(
+        (photo) => photo.clothing_type === "shirt"
+      );
+      const pantsData = enrichedData.filter(
+        (photo) => photo.clothing_type === "pants"
+      );
+      const shoesData = enrichedData.filter(
+        (photo) => photo.clothing_type === "shoes"
+      );
+      const accessoriesData = enrichedData.filter(
+        (photo) => photo.clothing_type === "accessories"
+      );
+
+      setHats(hatsData);
+      setShirts(shirtsData);
+      setPants(pantsData);
+      setShoes(shoesData);
+      setAccessories(accessoriesData);
+    } else {
       console.error("Failed to fetch image metadata from database:", error);
     }
-
-
   };
 
   useEffect(() => {
@@ -127,117 +130,127 @@ const ClosetUI = ({ route }) => {
     </TouchableOpacity>
   );
 
-  
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.mainHeader}>My Closet</Text>
-      {/* <FlatList
-        data={photos}
-        extraData={photos}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.imageContainer}>
-            {renderDelete(item.last_modified)}
-            <Image
-              source={{ uri: item.url }}
-              style={styles.image}
-              onError={(error) => console.log("Error loading image:", error)}
-            />
-          </View>
-        )}
-      /> */}
       <ScrollView>
-      <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Hats</Text>
-        <FlatList
-          data={hats}
-          extraData={photos}
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Hats</Text>
+          <FlatList
+            data={hats}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "hat_" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                {renderDelete(item.last_modified)}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
 
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "hat_" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
-              <Image source={{ uri: item.url }} style={styles.image} />
-            </View>
-          )}
-        />
-      </View>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Shirts</Text>
+          <FlatList
+            data={shirts}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "shirt_" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                {renderDelete(item.last_modified)}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
 
-      <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shirts</Text>
-        <FlatList
-          data={shirts}
-          extraData={photos}
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            Pants / Shorts
+          </Text>
+          <FlatList
+            data={pants}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "pants_" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                {renderDelete(item.last_modified)}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
 
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "shirt_" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
-              <Image source={{ uri: item.url }} style={styles.image} />
-            </View>
-          )}
-        />
-      </View>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Shoes</Text>
+          <FlatList
+            data={shoes}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "shoes_" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                {renderDelete(item.last_modified)}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
 
-      <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Pants / Shorts</Text>
-        <FlatList
-          data={pants}
-          extraData={photos}
-
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "pants_" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
-              <Image source={{ uri: item.url }} style={styles.image} />
-            </View>
-          )}
-        />
-      </View>
-
-      <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shoes</Text>
-        <FlatList
-          data={shoes}
-          extraData={photos}
-
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "shoes_" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
-              <Image source={{ uri: item.url }} style={styles.image} />
-            </View>
-          )}
-        />
-      </View>
-
-      <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Accessories</Text>
-        <FlatList
-          data={accessories}
-          extraData={photos}
-
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "accessories" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
-              <Image source={{ uri: item.url }} style={styles.image} />
-            </View>
-          )}
-        />
-      </View>
-</ScrollView>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>Accessories</Text>
+          <FlatList
+            data={accessories}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "accessories" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                {renderDelete(item.last_modified)}
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -255,22 +268,20 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   image: {
-    width: "100%",
-    height: 225,
-    width: 200,
+    width: 150,
+    height: 150,
     resizeMode: "cover",
     marginVertical: 10,
     borderRadius: 15,
   },
   imageContainer: {
-    //width: '300%',          
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    //width: '300%',
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
     margin: 10,
     borderRadius: 15,
   },
-  
 });
 
 export default ClosetUI;

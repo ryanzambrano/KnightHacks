@@ -20,8 +20,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Dropdown } from "react-native-element-dropdown";
 
 // Inside the AddClothingItem component:
-const base_url =
-  "https://vzdnrdsqkzwzihnqfong.supabase.co/storage/v1/object/public/user_pictures";
 
 const clothingTypeOptions = [
   { label: "Hat", value: "hat" },
@@ -93,77 +91,37 @@ const settingOptions = [
   { label: "Wedding", value: "wedding" },
 ];
 
-const AddClothingItem = ({ route }) => {
+const ClothingItem = ({ route }) => {
   const navigation = useNavigation();
   const { session } = route.params;
+  const { item } = route.params;
+  console.log(item.url);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedFit, setSelectedFit] = useState(null);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
-  const [clothingName, setClothingName] = useState("");
+  const [clothingName, setClothingName] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   // New state variable
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [fetched, setFetched] = useState(false);
 
-  const handleImageSelection = async () => {
-    // Just the selection process
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
-    }
-
-    const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      base64: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!imagePickerResult.canceled) {
-      setSelectedImage(imagePickerResult.assets[0].uri); // Set the selected image URI
-    }
-  };
-
-  const handleImageUpload = async () => {
+  const saveImageData = async () => {
     try {
-      const timestamp = new Date().toISOString();
-
-      const compressedImage = await manipulateAsync(selectedImage, [], {
-        compress: 0.2,
-        format: "jpeg",
-        base64: true,
-      });
-
-      const buffer = decode(compressedImage.base64);
-      const filename = `${session.user.id}/${session.user.id}-${timestamp}`;
-
-      const { data: imageData, error: uploadError } = await supabase.storage
-        .from("user_pictures")
-        .upload(filename, buffer, {
-          contentType: "image/jpeg",
-        });
-      if (uploadError) {
-        alert(uploadError.message);
-        return;
-      }
-
-      const { data, error } = await supabase.from("user_images").insert([
-        {
-          user_id: session.user.id,
-          last_modified: timestamp,
-          clothing_type: selectedType,
-          color: selectedColor,
-          fit: selectedFit,
-          material: selectedMaterial,
-          setting: selectedSetting,
-          name: clothingName,
-          url: `${base_url}/${session.user.id}/${session.user.id}-${timestamp}`,
-        },
-      ]);
+      const { data, error } = await supabase
+        .from("user_images")
+        .update([
+          {
+            clothing_type: selectedType,
+            color: selectedColor,
+            fit: selectedFit,
+            material: selectedMaterial,
+            setting: selectedSetting,
+            name: clothingName,
+          },
+        ])
+        .eq("url", item.url);
 
       if (error) {
         alert(error.message);
@@ -175,25 +133,52 @@ const AddClothingItem = ({ route }) => {
     }
   };
 
+  async function fetchItem() {
+    try {
+      const { data, error } = await supabase
+        .from("user_images")
+        .select("clothing_type, color, fit, material, setting, name")
+        .eq("url", item.url)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setClothingName(data.name);
+        setSelectedType(data.clothing_type);
+        setSelectedColor(data.color);
+        setSelectedFit(data.fit);
+        setSelectedMaterial(data.material);
+        setSelectedSetting(data.setting);
+        setFetched(true);
+      } else {
+        alert("Name not found.");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+  useEffect(() => {
+    if (!fetched) {
+      fetchItem();
+    }
+  });
+  [fetched];
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
-        <Text style={styles.mainHeader}>Add Clothing Item</Text>
+        <Text style={styles.mainHeader}>Clothing Item</Text>
         <ScrollView style={{ height: "90%" }}>
-          <TouchableOpacity
-            style={styles.imageBox}
-            onPress={handleImageSelection}
-          >
-            {selectedImage ? ( // If an image is selected, show it
-              <Image
-                source={{ uri: selectedImage }}
-                style={{ width: "100%", height: "100%", borderRadius: 15 }}
-              />
-            ) : (
-              // Otherwise show the + sign
-              <Text style={styles.addText}>+</Text>
-            )}
-          </TouchableOpacity>
+          <Image
+            source={{ uri: item.url }}
+            style={{
+              width: "85%",
+              height: 325,
+              borderRadius: 15,
+              alignSelf: "center",
+            }}
+          />
 
           <Text
             style={{
@@ -338,7 +323,7 @@ const AddClothingItem = ({ route }) => {
               autoScroll={false}
               showsVerticalScrollIndicator={false}
               activeColor="#2D2D30"
-              value={selectedType}
+              value={selectedSetting}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
               onChange={(item) => {
@@ -347,13 +332,24 @@ const AddClothingItem = ({ route }) => {
               }}
             />
           </View>
-
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={handleImageUpload}
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 20,
+            }}
           >
-            <Text style={styles.addButtonText}>Add Piece</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.addButton} onPress={saveImageData}>
+              <Text style={styles.addButtonText}>Update Piece</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              //onPress={delete}
+            >
+              <Text style={styles.addButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -478,7 +474,7 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     padding: 10,
     //marginBottom: 40,
-    marginHorizontal: 140,
+    //marginHorizontal: 140,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -488,6 +484,16 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  deleteButton: {
+    backgroundColor: "red",
+    padding: 7,
+    //marginBottom: 40,
+    //marginHorizontal: 140,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10, // or any margin if needed
+  },
 });
 
-export default AddClothingItem;
+export default ClothingItem;
