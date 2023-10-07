@@ -23,7 +23,7 @@ const CustomTabBarButton = ({ children, onPress }) => (
             width: 50,
             height: 50,
             borderRadius: 35,
-            backgroundColor: '#00BFA6'
+            backgroundColor: '#cd9625'
         }}>
             {children}
         </View>
@@ -42,7 +42,7 @@ const TabNavigator = ({ route }) => {
         tabBarStyle: {
           position: 'absolute',
           bottom: -10,
-         
+        
           elevation: 0,
           backgroundColor: "#111111",
           borderRadius: 5,

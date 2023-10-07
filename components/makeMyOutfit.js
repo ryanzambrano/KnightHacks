@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'grey',
+    backgroundColor: '#1D1D20',
     marginBottom: 10,
   },
   header: {
@@ -143,11 +143,11 @@ const styles = StyleSheet.create({
     maxWidth: '70%', // Limit the width of message containers
   },
   userMessage: {
-    backgroundColor: '#dedede',
+    backgroundColor: 'white',
     alignSelf: 'flex-end',
   },
   translatedMessage: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#cd9625',
     alignSelf: 'flex-start',
   },
   message: {
@@ -172,5 +172,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: '#FFF',
   },
+
+  //#cd9625
 });
 export default MakeMyOutfitUI;

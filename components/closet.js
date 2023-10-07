@@ -12,8 +12,10 @@ import {
 import { supabase } from "./auth/supabase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const ClosetUI = ({ route }) => {
+  
   const { session } = route.params;
   const [photos, setPhotos] = useState([]);
 
@@ -24,6 +26,8 @@ const ClosetUI = ({ route }) => {
   const [pants, setPants] = useState([]);
   const [shoes, setShoes] = useState([]);
   const [accessories, setAccessories] = useState([]);
+
+  
 
 // ... You can add more state variables for other clothing types if necessary
 
@@ -147,9 +151,9 @@ const ClosetUI = ({ route }) => {
           </View>
         )}
       /> */}
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
       <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Hats</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingLeft: 10, color: 'white', paddingVertical: 5}}>Hats</Text>
         <FlatList
           data={hats}
           extraData={photos}
@@ -159,15 +163,16 @@ const ClosetUI = ({ route }) => {
           keyExtractor={(item, index) => "hat_" + index.toString()}
           renderItem={({ item }) => (
             <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
+             
               <Image source={{ uri: item.url }} style={styles.image} />
+              <Text style={{fontWeight: "600", color: 'white', paddingVertical: 5,}}>"{item.name}"</Text>
             </View>
           )}
         />
       </View>
 
       <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shirts</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingLeft: 10, color: 'white', paddingVertical: 5}}>Shirts</Text>
         <FlatList
           data={shirts}
           extraData={photos}
@@ -177,15 +182,16 @@ const ClosetUI = ({ route }) => {
           keyExtractor={(item, index) => "shirt_" + index.toString()}
           renderItem={({ item }) => (
             <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
+             
               <Image source={{ uri: item.url }} style={styles.image} />
+              <Text style={{fontWeight: "600", color: 'white', paddingVertical: 5,}}>"{item.name}"</Text>
             </View>
           )}
         />
       </View>
 
       <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Pants / Shorts</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingLeft: 10, color: 'white', paddingVertical: 5}}>Pants / Shorts</Text>
         <FlatList
           data={pants}
           extraData={photos}
@@ -195,15 +201,16 @@ const ClosetUI = ({ route }) => {
           keyExtractor={(item, index) => "pants_" + index.toString()}
           renderItem={({ item }) => (
             <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
+              
               <Image source={{ uri: item.url }} style={styles.image} />
+              <Text style={{fontWeight: "600", color: 'white', paddingVertical: 5,}}>"{item.name}"</Text>
             </View>
           )}
         />
       </View>
 
       <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Shoes</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingLeft: 10, color: 'white', paddingVertical: 5}}>Shoes</Text>
         <FlatList
           data={shoes}
           extraData={photos}
@@ -213,26 +220,29 @@ const ClosetUI = ({ route }) => {
           keyExtractor={(item, index) => "shoes_" + index.toString()}
           renderItem={({ item }) => (
             <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
+             
+            
               <Image source={{ uri: item.url }} style={styles.image} />
+              <Text style={{fontWeight: "600", color: 'white', paddingVertical: 5,}}>"{item.name}"</Text>
             </View>
           )}
         />
       </View>
 
       <View>
-        <Text style={{fontSize: 18, fontWeight: 'bold'}}>Accessories</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold', paddingLeft: 10, color: 'white', paddingVertical: 5}}>Accessories</Text>
         <FlatList
           data={accessories}
           extraData={photos}
-
+          paddingBottom={100}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => "accessories" + index.toString()}
           renderItem={({ item }) => (
             <View style={styles.imageContainer}>
-              {renderDelete(item.last_modified)}
+              
               <Image source={{ uri: item.url }} style={styles.image} />
+              <Text style={{fontWeight: "600", color: 'white', paddingVertical: 5,}}>"{item.name}"</Text>
             </View>
           )}
         />
@@ -245,14 +255,15 @@ const ClosetUI = ({ route }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1D1D20",
   },
   mainHeader: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-    color: "black",
-    marginVertical: 10,
+    color: "white",
+    marginBottom: 20,
+    marginTop: 10,
   },
   image: {
     width: "100%",

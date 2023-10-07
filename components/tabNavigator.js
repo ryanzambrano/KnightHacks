@@ -21,7 +21,7 @@ const TabNavigator = ({ route }) => {
         headerShown: false,
         tabBarStyle: {
           paddingHorizontal: 5,
-          paddingTop: 0,
+        
           backgroundColor: "#111111",
           //position: "absolute",
           borderTopWidth: 1.5,
@@ -60,6 +60,8 @@ const TabNavigator = ({ route }) => {
         component={MakeMyOutfitUI}
         initialParams={{ session }}
       />
+      
+      
     </Tab.Navigator>
   );
 };
