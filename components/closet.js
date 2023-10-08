@@ -29,9 +29,36 @@ const ClosetUI = ({ route, navigation }) => {
   const [suits, setSuits] = useState([]);
   const [jackets, setJackets] = useState([]);
 
-  // ... You can add more state variables for other clothing types if necessary
+  const [isHatsVisible, setIsHatsVisible] = useState(true);
+  const [isJacketsVisible, setIsJacketsVisible] = useState(true);
+  const [isShirtsVisible, setIsShirtsVisible] = useState(true);
+  const [isPantsVisible, setIsPantsVisible] = useState(true);
+  const [isShoesVisible, setIsShoesVisible] = useState(true);
+  const [isAccessoriesVisible, setIsAccessoriesVisible] = useState(true);
 
-  // ... You can add more state variables for other clothing types if necessa
+  const CategoryHeader = ({ title, isVisible, toggleVisibility }) => (
+    <TouchableOpacity
+      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15 }}
+      onPress={toggleVisibility}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: 'white',
+          flex: 1,
+       
+        }}
+      >
+        {title}
+      </Text>
+      <Text style={{ fontSize: 40, color: 'white' }}>
+        {isVisible ? '▾' : '▸'}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  
   const deletePictures = async (lastModified) => {
     try {
       const filename = `${session.user.id}/${session.user.id}-${lastModified}`;
@@ -149,59 +176,51 @@ const ClosetUI = ({ route, navigation }) => {
       <Text style={styles.mainHeader}>My Closet</Text>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Hats
-          </Text>
-          <FlatList
-            data={hats}
-            extraData={photos}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "hat_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 5,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
-        </View>
+      <CategoryHeader 
+      title="Hats" 
+      isVisible={isHatsVisible} 
+      toggleVisibility={() => setIsHatsVisible(prev => !prev)}
+    />
+    {isHatsVisible && (
+      <View>
+        <FlatList
+          data={hats}
+          extraData={photos}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => "hat_" + index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.imageContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("ClothingItem", { item });
+                }}
+              >
+                <Image source={{ uri: item.url }} style={styles.image} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: "600",
+                  color: "white",
+                  paddingVertical: 5,
+                }}
+              >
+                "{item.name}"
+              </Text>
+            </View>
+          )}
+        />
+      </View>
+    )}
 
+
+<CategoryHeader 
+      title="Jackets / Sweaters" 
+      isVisible={isJacketsVisible} 
+      toggleVisibility={() => setIsJacketsVisible(prev => !prev)}
+    />
+    {isJacketsVisible && (
         <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Jackets / Sweaters
-          </Text>
           <FlatList
             data={jackets}
             extraData={photos}
@@ -230,19 +249,16 @@ const ClosetUI = ({ route, navigation }) => {
             )}
           />
         </View>
+    )}
 
+<CategoryHeader 
+      title="Shirts" 
+      isVisible={isShirtsVisible} 
+      toggleVisibility={() => setIsShirtsVisible(prev => !prev)}
+    />
+    {isShirtsVisible && (
         <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Shirts
-          </Text>
+        
           <FlatList
             data={shirts}
             extraData={photos}
@@ -271,19 +287,15 @@ const ClosetUI = ({ route, navigation }) => {
             )}
           />
         </View>
+    )}
 
+<CategoryHeader 
+      title="Pants / Shorts" 
+      isVisible={isPantsVisible} 
+      toggleVisibility={() => setIsPantsVisible(prev => !prev)}
+    />
+    {isPantsVisible && (
         <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Pants / Shorts
-          </Text>
           <FlatList
             data={pants}
             extraData={photos}
@@ -312,19 +324,15 @@ const ClosetUI = ({ route, navigation }) => {
             )}
           />
         </View>
+    )}
 
+<CategoryHeader 
+      title="Shoes" 
+      isVisible={isShoesVisible} 
+      toggleVisibility={() => setIsShoesVisible(prev => !prev)}
+    />
+    {isShoesVisible && (
         <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Shoes
-          </Text>
           <FlatList
             data={shoes}
             extraData={photos}
@@ -353,19 +361,17 @@ const ClosetUI = ({ route, navigation }) => {
             )}
           />
         </View>
+    )}
 
-        <View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              paddingLeft: 10,
-              color: "white",
-              paddingVertical: 10,
-            }}
-          >
-            Accessories
-          </Text>
+
+<CategoryHeader 
+      title="Accessories" 
+      isVisible={isAccessoriesVisible} 
+      toggleVisibility={() => setIsAccessoriesVisible(prev => !prev)}
+      
+    />
+    {isAccessoriesVisible && (
+      <View>
           <FlatList
             data={accessories}
             extraData={photos}
@@ -395,11 +401,13 @@ const ClosetUI = ({ route, navigation }) => {
             )}
           />
           <View>
-          
-          
-          
+            
+        </View>  
         </View>
-        </View>
+         )} 
+         {!isAccessoriesVisible &&
+            <View style={{ height: 100 }}></View>
+         }
       </ScrollView>
       <StatusBar style="light" />
     </SafeAreaView>
