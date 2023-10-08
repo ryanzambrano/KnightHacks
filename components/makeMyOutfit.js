@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import OpenAI from "openai";
 import { supabase } from "./auth/supabase";
+import LoadingDots from 'react-native-loading-dots';
+
 
 const MakeMyOutfitUI = ({ route }) => {
   const { session } = route.params;
@@ -11,9 +13,18 @@ const MakeMyOutfitUI = ({ route }) => {
   const [inputText, setInputText] = useState('');
   const [translatedResponse, setTranslatedResponse] = useState('');
   const [wardrobeString, setWardrobeString] = useState('');
+  const [loading, setLoading] = useState(false);
+  const flatListRef = useRef(null);
 
+
+  const renderLoadingDots = () => {
+    if (loading && messages.length > 0 && messages[messages.length - 1].user) {
+      return <View style={styles.loadingDots}><LoadingDots size={8} colors={['grey', 'gold', 'grey', 'gold']}/></View>;
+    }
+    return null;
+  };
   
-  const apiKey = ''; // Replace with your actual API key
+  const apiKey = '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'; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey
   });
@@ -41,7 +52,6 @@ const MakeMyOutfitUI = ({ route }) => {
   //console.log('Wardrobe as a single string:', wardrobeString);
   // Use 'data' in your application
 }
-
   };
 
   useEffect(() => {
@@ -51,6 +61,7 @@ const MakeMyOutfitUI = ({ route }) => {
   
   const translateText = async (message) => {
     try {
+      
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -90,12 +101,17 @@ const MakeMyOutfitUI = ({ route }) => {
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: message, user: true },
+        
       ]);
       setMessage('');
-  
+      flatListRef.current?.scrollToEnd({ animated: true });
+
+      setLoading(true);
       // Always call the translation function
       try {
+        
         const translatedText = await translateText(message);
+        setLoading(false);
         // Update the translated message in the state
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -103,6 +119,7 @@ const MakeMyOutfitUI = ({ route }) => {
         ]);
       } catch (error) {
         console.error('Error translating text:', error);
+        setLoading(false);
       }
     }
   };
@@ -116,24 +133,35 @@ const MakeMyOutfitUI = ({ route }) => {
     >
       <View style={styles.header}></View>
       <View style={styles.messagesContainer}>
+    
       <FlatList
-  data={messages}
-  renderItem={({ item }) => (
-    <View
-      style={[
-        styles.messageContainer,
-        item.user ? styles.userMessage : styles.translatedMessage,
-      ]}
-    >
-      <Text style={styles.message}>
-        {item.user ? item.text : item.text.content}
-      </Text>
-    </View>
-  )}
-  keyExtractor={(_, index) => index.toString()}
-  contentContainerStyle={styles.messagesContent}
-/>
+        data={messages}
+        ref={flatListRef}
+        renderItem={({ item, index }) => (
+          <View
+          
+            style={[
+              styles.messageContainer,
+              item.user ? styles.userMessage : styles.translatedMessage,
+              
+            ]}
+          >
+            
+            <Text style={styles.message}>
+              {item.user ? item.text : item.text.content}
+            </Text>
+            
+          </View>
+          
+        )}
+        ListFooterComponent={renderLoadingDots}
+        keyExtractor={(_, index) => index.toString()}
+        contentContainerStyle={styles.messagesContent}
+        
+      />
+       
       </View>
+      
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -199,7 +227,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   input: {
     flex: 1,
@@ -210,7 +239,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#2B2D2F",
   },
-
+  loadingDots: {
+    marginLeft: 10, // provide some left spacing
+    alignSelf: 'flex-start', 
+    paddingBottom: 30,
+  },
   //#cd9625
 });
 export default MakeMyOutfitUI;
