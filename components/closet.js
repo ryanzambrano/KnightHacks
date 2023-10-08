@@ -59,6 +59,13 @@ const ClosetUI = ({ route, navigation }) => {
   );
 
   
+  const EmptyListComponent = () => (
+    <View style={styles.emptyListContainer}>
+      <Text style={styles.emptyListText}>Nothing to see here...</Text>
+    </View>
+  );
+
+  
   const deletePictures = async (lastModified) => {
     try {
       const filename = `${session.user.id}/${session.user.id}-${lastModified}`;
@@ -185,6 +192,7 @@ const ClosetUI = ({ route, navigation }) => {
       <View>
         <FlatList
           data={hats}
+          ListEmptyComponent={EmptyListComponent}
           extraData={photos}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -223,6 +231,7 @@ const ClosetUI = ({ route, navigation }) => {
         <View>
           <FlatList
             data={jackets}
+            ListEmptyComponent={EmptyListComponent}
             extraData={photos}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -261,6 +270,7 @@ const ClosetUI = ({ route, navigation }) => {
         
           <FlatList
             data={shirts}
+            ListEmptyComponent={EmptyListComponent}
             extraData={photos}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -298,6 +308,7 @@ const ClosetUI = ({ route, navigation }) => {
         <View>
           <FlatList
             data={pants}
+            ListEmptyComponent={EmptyListComponent}
             extraData={photos}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -335,6 +346,7 @@ const ClosetUI = ({ route, navigation }) => {
         <View>
           <FlatList
             data={shoes}
+            ListEmptyComponent={EmptyListComponent}
             extraData={photos}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -374,6 +386,7 @@ const ClosetUI = ({ route, navigation }) => {
       <View>
           <FlatList
             data={accessories}
+            ListEmptyComponent={EmptyListComponent}
             extraData={photos}
             paddingBottom={100}
             horizontal={true}
@@ -446,6 +459,15 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingTop: 5,
     backgroundColor: "#2B2D2F",
+  },
+  emptyListContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+  },
+  emptyListText: {
+    color: 'lightgrey',
+    fontSize: 16,
   },
 });
 
