@@ -33,14 +33,16 @@ const MakeMyOutfitUI = ({ route }) => {
       return (
         <View style={styles.loadingDots}>
           <LoadingDots size={8} colors={["grey", "gold", "grey", "gold"]} />
-          <Text style={{marginTop: 50, color: 'white', fontWeight: 'bold'}}>Generating...</Text>
+          <Text style={{ marginTop: 50, color: "white", fontWeight: "bold" }}>
+            Generating...
+          </Text>
         </View>
       );
     }
     return null;
   };
 
-  const apiKey = "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"; // Replace with your actual API key
+  const apiKey = ""; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey,
   });
@@ -87,7 +89,7 @@ const MakeMyOutfitUI = ({ route }) => {
           {
             role: "system",
             content:
-              "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, fasion theory, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that what they have in their wardrobe is not really the right fit for said event and give them an outfit that is more suitable even if it isn't in their wardrobe just be sure to mention the fact that it isn't in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event and give them an outfit that is right for said event and it doesn't have to be in their wardrobe if they don't have the clothes for the right event based on your judgment just be sure mention that it isn't in their wardrobe if it isn't. Lastly, if they don't have enough clothes to complete an outfit just say I don't have enough clothes to complete an outfit but I can recommend an outfit in general it doesn't have to be in their wardrobe but use what they have in their wardrobe if possible, so you can put in specific clothing items that they don't have in their wardrobe just be sure to mention that it is not in their wardrobe. It should be outputted in this exact format so don't say anything before saying which outfit it is going to be: \n\"\nOutfit: \nTop:\nYour x (name), \nBottom: \nYour x(name), \nShoes: \nYour x(name)\nHats and/or accessories\nYour x(name)\n\" Always mention why you chose the outfit with a couple of sentences. If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \n\"Enjoy your new drip!\". Give me the URLs with the respective items at the bottom of the response in the order of hat, top, bottom, shoes, and accessories in a comma-separated format like this: urlx,urly,urlz. No need to mention which one is which just give me the URLs and only the URLs in a comma-separated sentence.\n",
+              "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, fasion theory, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that what they have in their wardrobe is not really the right fit for said event and give them an outfit that is more suitable even if it isn't in their wardrobe just be sure to mention the fact that it isn't in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event and give them an outfit that is right for said event and it doesn't have to be in their wardrobe if they don't have the clothes for the right event based on your judgment just be sure mention that it isn't in their wardrobe if it isn't. Lastly, if they don't have enough clothes to complete an outfit just say I don't have enough clothes to complete an outfit but I can recommend an outfit in general it doesn't have to be in their wardrobe but use what they have in their wardrobe if possible, so you can put in specific clothing items that they don't have in their wardrobe just be sure to mention that it is not in their wardrobe. It should be outputted in this exact format so don't say anything before saying which outfit it is going to be: \n\"\nTop:\nYour x (name), \nBottom: \nYour x(name), \nShoes: \nYour x(name)\nHats and/or accessories\nYour x(name)\n\" Always mention why you chose the outfit with a couple of sentences. If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \n\"Enjoy your new drip!\". Give me the URLs with the respective items at the bottom of the response in the order of hat, top, bottom, shoes, and accessories in a comma-separated format like this: urlx,urly,urlz. No need to mention which one is which just give me the URLs and only the URLs in a comma-separated sentence.\n",
           },
           {
             role: "user",
@@ -104,7 +106,8 @@ const MakeMyOutfitUI = ({ route }) => {
         frequency_penalty: 0,
         presence_penalty: 0,
       });
-      const gpt = response.choices[0].message.content; // Check if content is the right property
+      const gpt = response.choices[0].message.content;
+      console.log(gpt); // Check if content is the right property
 
       const urls = Array.from(gpt.matchAll(/https?:\/\/\S+/g), (m) => m[0]);
 
@@ -123,20 +126,15 @@ const MakeMyOutfitUI = ({ route }) => {
         cleanedText = gpt.substring(0, indexOfFirstUrl).trim();
       }
 
-      let indexOfURLs = gpt.toLowerCase().indexOf("url");
-      if (indexOfURLs !== -1) {
-        cleanedText = gpt.substring(0, indexOfURLs).trim();
-      }
-
-      let indexOfHttps = gpt.toLowerCase().indexOf("url");
+      const indexOfHttps = gpt.toLowerCase().indexOf("http");
       if (indexOfHttps !== -1) {
         cleanedText = gpt.substring(0, indexOfHttps).trim();
       }
 
-      //console.log("cleaned text:", cleanedText);
-      console.log("\nExtracted URLs:", urls);
-
-      console.log(photoUrls);
+      const indexOfURLs = gpt.toLowerCase().indexOf("url");
+      if (indexOfURLs !== -1) {
+        cleanedText = gpt.substring(0, indexOfURLs).trim();
+      }
 
       setTranslatedResponse(cleanedText);
 
@@ -202,14 +200,14 @@ const MakeMyOutfitUI = ({ route }) => {
     "Help me pick a look for a family barbecue.",
   ];
 
-   const renderEmptyList = () => {
+  const renderEmptyList = () => {
     return (
-        <View style={styles.emptyListContainer}>
-            <Text style={styles.emptyListText}>Need inspiration? Try asking:</Text>
-            <Text style={styles.suggestionText}>{promptIdeas[currentPrompt]}</Text>
-        </View>
+      <View style={styles.emptyListContainer}>
+        <Text style={styles.emptyListText}>Need inspiration? Try asking:</Text>
+        <Text style={styles.suggestionText}>{promptIdeas[currentPrompt]}</Text>
+      </View>
     );
-};
+  };
 
   const RenderPhotos = () => {
     if (!photoUrls || photoUrls.length === 0) {
@@ -229,10 +227,12 @@ const MakeMyOutfitUI = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: "#1D1D20", marginBottom: 80,}}>
-    <View style={styles.header}>
-  <Text style={styles.headerText}>Build an Outfit</Text>
-    </View>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#1D1D20", marginBottom: 80 }}
+    >
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Build an Outfit</Text>
+      </View>
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : null}
@@ -303,10 +303,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   headerText: {
-    fontSize: 20,  
-    fontWeight: 'bold',
-    color: 'white',
-},
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
   messagesContainer: {
     flex: 1,
   },
@@ -382,25 +382,25 @@ const styles = StyleSheet.create({
   },
   emptyListContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 100,
   },
   emptyListText: {
     fontSize: 18,
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     paddingHorizontal: 10,
     marginBottom: 15,
   },
-  
+
   suggestionText: {
     fontSize: 16,
-    color: '#888',
+    color: "#888",
     paddingHorizontal: 10,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
-  }
+  },
   //#cd9625
 });
 export default MakeMyOutfitUI;

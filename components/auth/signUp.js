@@ -306,8 +306,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    backgroundColor: "#14999999",
-    borderColor: "#14999999",
+    backgroundColor: "#cd9625",
+    borderColor: "#cd9625",
   },
 
   continueText: {
