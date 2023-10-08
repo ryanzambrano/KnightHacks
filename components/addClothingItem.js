@@ -107,9 +107,9 @@ const AddClothingItem = ({ route }) => {
   const [selectedType, setSelectedType] = useState(null);
   const [clothingName, setClothingName] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  // New state variable
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleImageSelection = async () => {
     // Just the selection process
@@ -135,6 +135,7 @@ const AddClothingItem = ({ route }) => {
 
   const handleImageUpload = async () => {
     try {
+      setIsLoading(true);
       const timestamp = new Date().toISOString();
 
       const compressedImage = await manipulateAsync(selectedImage, [], {
@@ -173,10 +174,18 @@ const AddClothingItem = ({ route }) => {
       if (error) {
         alert(error.message);
       } else {
+        setSelectedColor(null);
+        setSelectedFit(null);
+        setSelectedType(null);
+        setSelectedMaterial(null);
+        setSelectedImage(null);
+        setClothingName(null);
         alert("uploaded successfully");
       }
     } catch (error) {
       alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -211,7 +220,7 @@ const AddClothingItem = ({ route }) => {
             alignSelf={"center"}
             paddingTop={20}
           >
-            Name:
+            Name
           </Text>
           <TextInput
             style={styles.textInput}
@@ -256,7 +265,7 @@ const AddClothingItem = ({ route }) => {
             <Dropdown
               style={styles.dropdown}
               data={colorOptions}
-              placeholder="Select Fit"
+              placeholder="Select Color"
               placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
@@ -283,7 +292,7 @@ const AddClothingItem = ({ route }) => {
             <Dropdown
               style={styles.dropdown}
               data={fitOptions}
-              placeholder="Select Color"
+              placeholder="Select Fit"
               placeholderStyle={{ color: "white" }}
               maxHeight={300}
               labelField="label"
@@ -361,11 +370,19 @@ const AddClothingItem = ({ route }) => {
 
           <TouchableOpacity
             style={styles.addButton}
-            onPress={handleImageUpload}
+            onPress={() => {
+              handleImageUpload();
+              setIsLoading(true);
+            }}
           >
             <Text style={styles.addButtonText}>Add Piece</Text>
           </TouchableOpacity>
         </ScrollView>
+        {isLoading && (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Uploading...</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

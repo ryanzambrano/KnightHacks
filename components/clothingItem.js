@@ -229,7 +229,7 @@ const ClothingItem = ({ route }) => {
             alignSelf={"center"}
             paddingTop={20}
           >
-            Name:
+            Name
           </Text>
           <TextInput
             style={styles.textInput}
@@ -541,7 +541,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10, // or any margin if needed
-    
   },
 });
 
