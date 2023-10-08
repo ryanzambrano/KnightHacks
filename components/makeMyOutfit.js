@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, FlatList, StyleSheet, Text, KeyboardAvoidingView, Platform, SafeAreaView } from 'react-native';
 import axios from 'axios';
 import OpenAI from "openai";
+import { supabase } from "./auth/supabase";
 
 const MakeMyOutfitUI = ({ route }) => {
   const { session } = route.params;
@@ -9,11 +10,44 @@ const MakeMyOutfitUI = ({ route }) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [translatedResponse, setTranslatedResponse] = useState('');
+  const [wardrobeString, setWardrobeString] = useState('');
+
   
   const apiKey = ''; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey
   });
+
+  const fetchwardrobe = async () => {
+
+    const id = '81d94bc6-a308-41da-b22b-9765a916f4ff';
+
+    const { data, error } = await supabase
+    .from('user_images')
+    .select('color, setting, material, fit, clothing_type, name')
+    .eq('user_id', id);
+
+  if (error) {
+  console.error('Error fetching user images:', error.message);
+  // Handle the error
+}   else {
+  // 'data' contains the selected rows
+  const newWardrobeString = data.map(item => {
+    return `${item.color}, ${item.setting}, ${item.material}, ${item.fit}, ${item.clothing_type}, ${item.name}`;
+  }).join('\n');
+
+  setWardrobeString(newWardrobeString)
+
+  //console.log('Wardrobe as a single string:', wardrobeString);
+  // Use 'data' in your application
+}
+
+  };
+
+  useEffect(() => {
+    // This code will run when the component mounts
+    fetchwardrobe();
+  }, []); 
   
   const translateText = async (message) => {
     try {
@@ -22,11 +56,11 @@ const MakeMyOutfitUI = ({ route }) => {
         messages: [
           {
             "role": "system",
-            "content": "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that based on what is in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event but give them an outfit with their wardrobe. It should be outputted in this exactly in this format so don't say anything before the outfit: \"\nOutfit: \nTop:\n Your x, \nBottom:  \nYour x, \nshoes: \nYour x\n\" If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \"enjoy your new drip!\""
+            "content": "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that based on what is in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event but give them an outfit with their wardrobe. It should be outputted in this exactly in this format so don't say anything before the outfit: \"\nOutfit: \nTop:\n Your x (name), \nBottom:  \nYour x(name), \nShoes: \nYour x(name)\nHats and/or accessories\nYour x(name)\n\" If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \"enjoy your new drip!\""
           },
           {
             "role": "user",
-            "content": "My wardrobe include: \"Blue Dress shirt, White Polo shirt, Black Button-down shirt, Pink Blouse, Yellow Flannel shirt, Gray Henley shirt, Green Tank top, Blue Jeans, Black Slacks, Khaki Chinos, Brown Cargo pants, Gray Sweatpants, White Sneakers, Brown Loafers, Black Oxford shoes, Red High-top sneakers, Blue Running shoes, Purple V-neck sweater, Striped long-sleeve shirt, Floral-print blouse, Plaid flannel shirt, Orange graphic tee, Maroon polo shirt, Denim jacket, Gray turtleneck sweater, Olive cargo shorts, Camouflage joggers, White linen pants, Slim-fit gray trousers, Corduroy pants, Ripped skinny jeans, Leather biker pants, Black yoga leggings, High-heeled ankle boots, Canvas slip-on sneakers, Suede desert boots, Patent leather loafers, Hiking sandals, Classic Converse Chuck Taylors, Wingtip brogues, Athletic running shoes\""
+            "content": wardrobeString
           },
           {
             "role": "user",
@@ -40,7 +74,6 @@ const MakeMyOutfitUI = ({ route }) => {
         presence_penalty: 0,
       });
       const translated = response.choices[0].message;
-      console.log(translated);
       setTranslatedResponse(translated);
       // console.log(response.data.choices[0].text.trimStart());
    
