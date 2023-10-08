@@ -38,7 +38,7 @@ const MakeMyOutfitUI = ({ route }) => {
     return null;
   };
 
-  const apiKey = "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"; // Replace with your actual API key
+  const apiKey = ""; // Replace with your actual API key
 
   const openai = new OpenAI({
     apiKey,

@@ -206,7 +206,22 @@ const ClothingItem = ({ route }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.headerContainer}>
-        <Text style={styles.mainHeader}>Clothing Item</Text>
+        <View style={styles.header}>
+          <View style={styles.left}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
+              <Text style={styles.backButtonText}>←</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.center}>
+            <Text style={styles.mainHeader}>Clothing Item</Text>
+          </View>
+          <View style={styles.center}>
+            <Text style={styles.center}></Text>
+          </View>
+        </View>
         <ScrollView style={{ height: "90%" }}>
           <Image
             source={{ uri: item.url }}
@@ -413,7 +428,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
     marginTop: 10,
-    marginBottom: 25,
+    marginBottom: 10,
+    marginLeft: -5,
   },
   verticalScroll: {
     paddingHorizontal: 10,
@@ -541,6 +557,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10, // or any margin if needed
+  },
+  backButton: {
+    marginLeft: 15,
+  },
+  backButtonText: {
+    alignSelf: "center",
+    fontSize: 28,
+    color: "grey",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: 10,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+    justifyContent: "space-between",
+  },
+  left: {
+    //flex: 0,
+    alignSelf: "center",
+  },
+  center: {
+    alignSelf: "center",
+    padding: 7,
   },
 });
 

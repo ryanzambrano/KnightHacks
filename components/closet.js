@@ -38,34 +38,35 @@ const ClosetUI = ({ route, navigation }) => {
 
   const CategoryHeader = ({ title, isVisible, toggleVisibility }) => (
     <TouchableOpacity
-      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15 }}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 15,
+      }}
       onPress={toggleVisibility}
     >
       <Text
         style={{
           fontSize: 20,
-          fontWeight: 'bold',
-          color: 'white',
+          fontWeight: "bold",
+          color: "white",
           flex: 1,
-       
         }}
       >
         {title}
       </Text>
-      <Text style={{ fontSize: 40, color: 'white' }}>
-        {isVisible ? '▾' : '▸'}
+      <Text style={{ fontSize: 40, color: "white" }}>
+        {isVisible ? "▾" : "▸"}
       </Text>
     </TouchableOpacity>
   );
 
-  
   const EmptyListComponent = () => (
     <View style={styles.emptyListContainer}>
       <Text style={styles.emptyListText}>Nothing to see here...</Text>
     </View>
   );
 
-  
   const deletePictures = async (lastModified) => {
     try {
       const filename = `${session.user.id}/${session.user.id}-${lastModified}`;
@@ -146,7 +147,6 @@ const ClosetUI = ({ route, navigation }) => {
         (photo) => photo.clothing_type === "suit / dress"
       );
 
-
       setHats(hatsData);
       setJackets(jacketsData);
       setShirts(shirtsData);
@@ -166,261 +166,242 @@ const ClosetUI = ({ route, navigation }) => {
     }
   }, [isFocused]);
 
-  const renderDelete = (lastModified) => (
-    <TouchableOpacity
-      style={styles.button}
-      onPress={async () => {
-        await deletePictures(lastModified);
-        await fetchPhotoTimestampsFromDatabase();
-      }}
-    >
-      <Icon name="times" size={25} color="grey" />
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <Text style={styles.mainHeader}>My Closet</Text>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-      <CategoryHeader 
-      title="Hats" 
-      isVisible={isHatsVisible} 
-      toggleVisibility={() => setIsHatsVisible(prev => !prev)}
-    />
-    {isHatsVisible && (
-      <View>
-        <FlatList
-          data={hats}
-          ListEmptyComponent={EmptyListComponent}
-          extraData={photos}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => "hat_" + index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.imageContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("ClothingItem", { item });
-                }}
-              >
-                <Image source={{ uri: item.url }} style={styles.image} />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  fontWeight: "600",
-                  color: "white",
-                  paddingVertical: 5,
-                }}
-              >
-                "{item.name}"
-              </Text>
-            </View>
-          )}
+        <CategoryHeader
+          title="Hats"
+          isVisible={isHatsVisible}
+          toggleVisibility={() => setIsHatsVisible((prev) => !prev)}
         />
-      </View>
-    )}
-
-
-<CategoryHeader 
-      title="Jackets / Sweaters" 
-      isVisible={isJacketsVisible} 
-      toggleVisibility={() => setIsJacketsVisible(prev => !prev)}
-    />
-    {isJacketsVisible && (
-        <View>
-          <FlatList
-            data={jackets}
-            ListEmptyComponent={EmptyListComponent}
-            extraData={photos}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "jackets_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 5,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-    )}
-
-<CategoryHeader 
-      title="Shirts" 
-      isVisible={isShirtsVisible} 
-      toggleVisibility={() => setIsShirtsVisible(prev => !prev)}
-    />
-    {isShirtsVisible && (
-        <View>
-        
-          <FlatList
-            data={shirts}
-            ListEmptyComponent={EmptyListComponent}
-            extraData={photos}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "shirt_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 5,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-    )}
-
-<CategoryHeader 
-      title="Pants / Shorts" 
-      isVisible={isPantsVisible} 
-      toggleVisibility={() => setIsPantsVisible(prev => !prev)}
-    />
-    {isPantsVisible && (
-        <View>
-          <FlatList
-            data={pants}
-            ListEmptyComponent={EmptyListComponent}
-            extraData={photos}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "pants_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 15,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-    )}
-
-<CategoryHeader 
-      title="Shoes" 
-      isVisible={isShoesVisible} 
-      toggleVisibility={() => setIsShoesVisible(prev => !prev)}
-    />
-    {isShoesVisible && (
-        <View>
-          <FlatList
-            data={shoes}
-            ListEmptyComponent={EmptyListComponent}
-            extraData={photos}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "shoes_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 5,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-    )}
-
-
-<CategoryHeader 
-      title="Accessories" 
-      isVisible={isAccessoriesVisible} 
-      toggleVisibility={() => setIsAccessoriesVisible(prev => !prev)}
-      
-    />
-    {isAccessoriesVisible && (
-      <View>
-          <FlatList
-            data={accessories}
-            ListEmptyComponent={EmptyListComponent}
-            extraData={photos}
-            paddingBottom={100}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "accessories_" + index.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("ClothingItem", { item });
-                  }}
-                >
-                  <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontWeight: "600",
-                    color: "white",
-                    paddingVertical: 5,
-                  }}
-                >
-                  "{item.name}"
-                </Text>
-              </View>
-            )}
-          />
+        {isHatsVisible && (
           <View>
-            
-        </View>  
-        </View>
-         )} 
-         {!isAccessoriesVisible &&
-            <View style={{ height: 100 }}></View>
-         }
+            <FlatList
+              data={hats}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "hat_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+
+        <CategoryHeader
+          title="Jackets / Sweaters"
+          isVisible={isJacketsVisible}
+          toggleVisibility={() => setIsJacketsVisible((prev) => !prev)}
+        />
+        {isJacketsVisible && (
+          <View>
+            <FlatList
+              data={jackets}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "jackets_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+
+        <CategoryHeader
+          title="Shirts"
+          isVisible={isShirtsVisible}
+          toggleVisibility={() => setIsShirtsVisible((prev) => !prev)}
+        />
+        {isShirtsVisible && (
+          <View>
+            <FlatList
+              data={shirts}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "shirt_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+
+        <CategoryHeader
+          title="Pants / Shorts"
+          isVisible={isPantsVisible}
+          toggleVisibility={() => setIsPantsVisible((prev) => !prev)}
+        />
+        {isPantsVisible && (
+          <View>
+            <FlatList
+              data={pants}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "pants_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 15,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+
+        <CategoryHeader
+          title="Shoes"
+          isVisible={isShoesVisible}
+          toggleVisibility={() => setIsShoesVisible((prev) => !prev)}
+        />
+        {isShoesVisible && (
+          <View>
+            <FlatList
+              data={shoes}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "shoes_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
+
+        <CategoryHeader
+          title="Accessories"
+          isVisible={isAccessoriesVisible}
+          toggleVisibility={() => setIsAccessoriesVisible((prev) => !prev)}
+        />
+        {isAccessoriesVisible && (
+          <View>
+            <FlatList
+              data={accessories}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              paddingBottom={100}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "accessories_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+
+            <View></View>
+          </View>
+        )}
+        {!isAccessoriesVisible && <View style={{ height: 100 }}></View>}
       </ScrollView>
       <StatusBar style="light" />
     </SafeAreaView>
@@ -461,12 +442,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#2B2D2F",
   },
   emptyListContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 15,
   },
   emptyListText: {
-    color: 'lightgrey',
+    color: "lightgrey",
     fontSize: 16,
   },
 });
