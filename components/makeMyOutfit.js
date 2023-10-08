@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Image,
 } from "react-native";
 import axios from "axios";
 import OpenAI from "openai";
@@ -38,7 +39,7 @@ const MakeMyOutfitUI = ({ route }) => {
     return null;
   };
 
-  const apiKey = "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"; // Replace with your actual API key
+  const apiKey = ""; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey,
   });
@@ -65,7 +66,7 @@ const MakeMyOutfitUI = ({ route }) => {
         .join("\n");
 
       setWardrobeString(newWardrobeString);
-      console.log(wardrobeString);
+      //console.log(wardrobeString);
 
       //console.log('Wardrobe as a single string:', wardrobeString);
       // Use 'data' in your application
@@ -106,6 +107,14 @@ const MakeMyOutfitUI = ({ route }) => {
 
       const urls = Array.from(gpt.matchAll(/https?:\/\/\S+/g), (m) => m[0]);
 
+      const input = gpt;
+
+      const pattern = /https.{173}/g;
+
+      const extractedUrls = input.match(pattern);
+
+      setPhotoUrls(extractedUrls);
+
       let cleanedText = gpt;
 
       if (urls.length > 0) {
@@ -113,8 +122,10 @@ const MakeMyOutfitUI = ({ route }) => {
         cleanedText = gpt.substring(0, indexOfFirstUrl).trim();
       }
 
-      console.log("cleaned text:", cleanedText);
+      //console.log("cleaned text:", cleanedText);
       console.log("\nExtracted URLs:", urls);
+
+      console.log(photoUrls);
 
       setTranslatedResponse(cleanedText);
 
@@ -153,6 +164,23 @@ const MakeMyOutfitUI = ({ route }) => {
     }
   };
 
+  const RenderPhotos = () => {
+    if (!photoUrls || photoUrls.length === 0) {
+      return null;
+    }
+    const cleanedPhotoUrls = photoUrls.map((url) => url.replace(/[,.]$/, ""));
+
+    console.log(photoUrls);
+
+    return (
+      <View>
+        {photoUrls.map((url, index) => (
+          <Image key={index} source={{ uri: url }} style={styles.image} />
+        ))}
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "#1D1D20", marginBottom: 80 }}
@@ -168,13 +196,16 @@ const MakeMyOutfitUI = ({ route }) => {
             data={messages}
             ref={flatListRef}
             renderItem={({ item, index }) => (
-              <View
-                style={[
-                  styles.messageContainer,
-                  item.user ? styles.userMessage : styles.translatedMessage,
-                ]}
-              >
-                <Text style={styles.message}>{item.text}</Text>
+              <View style={{ flexDirection: "column" }}>
+                {!item.user && RenderPhotos()}
+                <View
+                  style={[
+                    styles.messageContainer,
+                    item.user ? styles.userMessage : styles.translatedMessage,
+                  ]}
+                >
+                  <Text style={styles.message}>{item.text}</Text>
+                </View>
               </View>
             )}
             ListFooterComponent={renderLoadingDots}
@@ -193,7 +224,14 @@ const MakeMyOutfitUI = ({ route }) => {
             placeholder="Type a message..."
             placeholderTextColor="#888"
           />
-          <Button title="Send" onPress={sendMessage} color="#cd9625" />
+          <Button
+            title="Send"
+            onPress={async () => {
+              setMessages("");
+              await sendMessage();
+            }}
+            color="#cd9625"
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -264,6 +302,28 @@ const styles = StyleSheet.create({
     marginLeft: 10, // provide some left spacing
     alignSelf: "flex-start",
     paddingBottom: 30,
+  },
+
+  image: {
+    width: 150,
+    height: 150,
+    resizeMode: "cover",
+    marginVertical: 10,
+    borderRadius: 15,
+  },
+  imageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    marginVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    paddingTop: 5,
+    backgroundColor: "#2B2D2F",
+    width: 200,
+    height: 200,
   },
   //#cd9625
 });
