@@ -22,12 +22,17 @@ const TwoMainPages = ({ route }) => {
 
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="TabNavigator"
           component={TabNavigator}
           initialParams={{ session }}
         />
+        <Stack.Screen
+        name="AddClothingItem"
+        component={AddClothingItem}
+        initialParams={{ session }}
+    />
         <Stack.Screen
           name="ClothingItem"
           component={ClothingItem}

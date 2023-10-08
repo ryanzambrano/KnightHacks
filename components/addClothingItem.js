@@ -25,12 +25,12 @@ const base_url =
 
 const clothingTypeOptions = [
   { label: "Hat", value: "hat" },
-  { label: "Jacket / Sweater", value: "jacket /sweater" },
+  { label: "Jacket / Sweater", value: "jacket / sweater" },
   { label: "Shirt", value: "shirt" },
   { label: "Pants", value: "pants" },
   { label: "Shoes", value: "shoes" },
   { label: "Accessory", value: "accessory" },
-  { label: "Suit / Dress:", value: "suit / dress" },
+  { label: "Suit / Dress", value: "suit / dress" },
 ];
 
 const colorOptions = [
@@ -180,7 +180,7 @@ const AddClothingItem = ({ route }) => {
         setSelectedMaterial(null);
         setSelectedImage(null);
         setClothingName(null);
-        alert("uploaded successfully");
+       navigation.navigate("Closet");
       }
     } catch (error) {
       alert(error.message);
@@ -191,6 +191,7 @@ const AddClothingItem = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.swipeIndicator}></View>
       <View style={styles.headerContainer}>
         <Text style={styles.mainHeader}>Add Clothing Item</Text>
         <ScrollView style={{ height: "90%" }}>
@@ -227,6 +228,8 @@ const AddClothingItem = ({ route }) => {
             placeholder="Name of Clothing"
             placeholderTextColor="white"
             fontSize={15}
+            keyboardAppearance="dark"
+            textAlign="center"
             value={clothingName}
             onChangeText={setClothingName}
           />
@@ -238,7 +241,7 @@ const AddClothingItem = ({ route }) => {
               data={clothingTypeOptions}
               placeholder="Select Clothing Type"
               placeholderTextColor="white"
-              maxHeight={300}
+              maxHeight={200}
               placeholderStyle={{ color: "white" }}
               labelField="label"
               valueField="value"
@@ -267,7 +270,7 @@ const AddClothingItem = ({ route }) => {
               data={colorOptions}
               placeholder="Select Color"
               placeholderStyle={{ color: "white" }}
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -294,7 +297,7 @@ const AddClothingItem = ({ route }) => {
               data={fitOptions}
               placeholder="Select Fit"
               placeholderStyle={{ color: "white" }}
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -321,7 +324,7 @@ const AddClothingItem = ({ route }) => {
               data={materialOptions}
               placeholder="Select Material"
               placeholderStyle={{ color: "white" }}
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -342,13 +345,13 @@ const AddClothingItem = ({ route }) => {
           </View>
           <View style={styles.divider}></View>
           <View style={styles.filterContainer}>
-            <Text style={styles.filterLabel}>Setting:</Text>
+            <Text style={styles.filterLabel}>Occasion:</Text>
             <Dropdown
               style={styles.dropdown}
               data={settingOptions}
-              placeholder="Select Setting"
+              placeholder="Select Occasion"
               placeholderStyle={{ color: "white" }}
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -391,20 +394,22 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#1D1D20",
+    marginBottom: -40,
   },
   mainHeader: {
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: 0,
+    paddingBottom: 20,
+    
   },
   verticalScroll: {
     paddingHorizontal: 10,
   },
   header: {
-    fontSize: 20,
+    fontSize: 19,
     color: "white",
     fontWeight: "bold",
     marginVertical: 10,
@@ -426,7 +431,7 @@ const styles = StyleSheet.create({
   imageBox: {
     width: "85%",
     height: 325,
-    backgroundColor: "lightgrey",
+    backgroundColor: "darkgrey",
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
@@ -507,16 +512,25 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: "#cd9625",
     padding: 10,
-    marginBottom: 70,
+    marginBottom: 50,
     marginHorizontal: 140,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10, // or any margin if needed
+    marginTop: 20, // or any margin if needed
   },
   addButtonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  swipeIndicator: {
+    alignSelf: 'center',
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: 'grey',
+    marginTop: 25,
+    marginBottom: 25, 
   },
 });
 

@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import MakeMyOutfitUI from "./makeMyOutfit";
+import { useNavigation } from '@react-navigation/native';
 import AddClothingItem from "./addClothingItem";
 import ClosetUI from "./closet";
 
@@ -33,8 +34,9 @@ const CustomTabBarButton = ({ children, onPress }) => (
   </TouchableOpacity>
 );
 
-const TabNavigator = ({ route }) => {
+const TabNavigator = ({ route, navigation }) => {
   const { session } = route.params;
+ 
 
   return (
     <Tab.Navigator
@@ -50,6 +52,7 @@ const TabNavigator = ({ route }) => {
           backgroundColor: "#111111",
           borderRadius: 5,
           height: 100,
+          borderTopWidth: 0, 
           // ...styles.shadow
         },
         tabBarIcon: ({ focused, color, size }) => {
@@ -81,17 +84,26 @@ const TabNavigator = ({ route }) => {
         initialParams={{ session }}
       />
 
-      <Tab.Screen
-        name="Add"
-        component={AddClothingItem}
-        initialParams={{ session }}
-        options={{
-          tabBarIcon: ({ focused }) => (
+<Tab.Screen
+    name="Add"
+    component={View} // A placeholder, won't actually render this.
+    listeners={{
+        tabPress: e => {
+            // Prevent the default tab press behavior
+            e.preventDefault();
+            
+            // Navigate to your modal screen
+            navigation.navigate('AddClothingItem');
+        },
+    }}
+    options={{
+        tabBarIcon: ({ focused }) => (
             <MaterialIcons name="add" size={24} color="#FFF" />
-          ),
-          tabBarButton: (props) => <CustomTabBarButton {...props} />,
-        }}
-      />
+        ),
+        tabBarButton: (props) => <CustomTabBarButton {...props} />,
+    }}
+/>
+
 
       <Tab.Screen
         name="Closet"

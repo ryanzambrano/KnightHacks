@@ -28,6 +28,7 @@ const ClosetUI = ({ route, navigation }) => {
   const [accessories, setAccessories] = useState([]);
   const [suits, setSuits] = useState([]);
   const [jackets, setJackets] = useState([]);
+  
 
   const [isHatsVisible, setIsHatsVisible] = useState(true);
   const [isJacketsVisible, setIsJacketsVisible] = useState(true);
@@ -35,6 +36,7 @@ const ClosetUI = ({ route, navigation }) => {
   const [isPantsVisible, setIsPantsVisible] = useState(true);
   const [isShoesVisible, setIsShoesVisible] = useState(true);
   const [isAccessoriesVisible, setIsAccessoriesVisible] = useState(true);
+  const [isSuitsVisible, setIsSuitsVisible] = useState(true);
 
   const CategoryHeader = ({ title, isVisible, toggleVisibility }) => (
     <TouchableOpacity
@@ -361,6 +363,43 @@ const ClosetUI = ({ route, navigation }) => {
           </View>
         )}
 
+<CategoryHeader
+          title="Suits / Dresses"
+          isVisible={isSuitsVisible}
+          toggleVisibility={() => setIsSuitsVisible((prev) => !prev)}
+        />
+        {isSuitsVisible && (
+          <View>
+            <FlatList
+              data={suits}
+              ListEmptyComponent={EmptyListComponent}
+              extraData={photos}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => "suits_" + index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("ClothingItem", { item });
+                    }}
+                  >
+                    <Image source={{ uri: item.url }} style={styles.image} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      color: "white",
+                      paddingVertical: 5,
+                    }}
+                  >
+                    "{item.name}"
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        )}
         <CategoryHeader
           title="Accessories"
           isVisible={isAccessoriesVisible}
@@ -398,9 +437,12 @@ const ClosetUI = ({ route, navigation }) => {
               )}
             />
 
-            <View></View>
+            <View>
+              
+            </View>
           </View>
         )}
+        
         {!isAccessoriesVisible && <View style={{ height: 100 }}></View>}
       </ScrollView>
       <StatusBar style="light" />
@@ -414,12 +456,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#1D1D20",
   },
   mainHeader: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
     marginBottom: 20,
-    marginTop: 10,
+    marginTop: 5,
   },
   image: {
     width: 150,

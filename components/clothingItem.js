@@ -130,12 +130,11 @@ const ClothingItem = ({ route }) => {
 
       if (error) {
         alert(error.message);
-      } else {
-        alert("uploaded successfully");
       }
     } catch (error) {
       alert(error.message);
     }
+    navigation.goBack();
   };
 
   async function fetchItem() {
@@ -251,6 +250,7 @@ const ClothingItem = ({ route }) => {
             placeholder="Name of Clothing"
             placeholderTextColor="white"
             fontSize={15}
+            textAlign="center"
             value={clothingName}
             onChangeText={setClothingName}
           />
@@ -261,7 +261,7 @@ const ClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={clothingTypeOptions}
               placeholder="Select Clothing Type"
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -289,7 +289,7 @@ const ClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={colorOptions}
               placeholder="Select Fit"
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -316,7 +316,7 @@ const ClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={fitOptions}
               placeholder="Select Color"
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -343,7 +343,7 @@ const ClothingItem = ({ route }) => {
               style={styles.dropdown}
               data={materialOptions}
               placeholder="Select Material"
-              maxHeight={300}
+              maxHeight={200}
               labelField="label"
               valueField="value"
               selectedTextStyle={styles.placeholderText}
@@ -365,12 +365,12 @@ const ClothingItem = ({ route }) => {
           </View>
           <View style={styles.divider}></View>
           <View style={styles.filterContainer}>
-            <Text style={styles.filterLabel}>Setting:</Text>
+            <Text style={styles.filterLabel}>Occasion:</Text>
             <Dropdown
               style={styles.dropdown}
               data={settingOptions}
-              placeholder="Select Setting"
-              maxHeight={300}
+              placeholder="Select Occasion"
+              maxHeight={200}
               labelField="label"
               valueField="value"
               placeholderStyle={{ color: "white" }}
@@ -421,9 +421,11 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#1D1D20",
+    marginBottom: -50,
+    paddingBottom: 50,
   },
   mainHeader: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
@@ -542,7 +544,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10, // or any margin if needed
+    marginBottom: 50,
+    marginTop: 20, // or any margin if needed
   },
   addButtonText: {
     color: "white",
@@ -550,13 +553,14 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: "red",
-    padding: 7,
+    padding: 12,
     //marginBottom: 40,
     //marginHorizontal: 140,
     borderRadius: 5,
+    marginBottom: 50, // or any margin if needed
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10, // or any margin if needed
+    marginTop: 20, // or any margin if needed
   },
   backButton: {
     marginLeft: 15,
