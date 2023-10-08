@@ -25,11 +25,12 @@ const base_url =
 
 const clothingTypeOptions = [
   { label: "Hat", value: "hat" },
-  { label: "Jacket / Suit:", value: "jacket / suit" },
+  { label: "Jacket / Sweater", value: "jacket /sweater" },
   { label: "Shirt", value: "shirt" },
   { label: "Pants", value: "pants" },
   { label: "Shoes", value: "shoes" },
   { label: "Accessory", value: "accessory" },
+  { label: "Suit / Dress:", value: "suit / dress" },
 ];
 
 const colorOptions = [
@@ -38,6 +39,8 @@ const colorOptions = [
   { label: "Brown", value: "brown" },
   { label: "Green", value: "green" },
   { label: "Grey", value: "grey" },
+  { label: "Silver", value: "silver" },
+  { label: "Gold", value: "gold" },
   { label: "Orange", value: "orange" },
   { label: "Pink", value: "pink" },
   { label: "Purple", value: "purple" },
@@ -69,6 +72,7 @@ const materialOptions = [
   { label: "Wool", value: "wool" },
   { label: "Linen", value: "linen" },
   { label: "Leather", value: "leather" },
+  { label: "Metal", value: "metal" },
   { label: "Suede", value: "suede" },
   { label: "Rayon", value: "rayon" },
   { label: "Spandex", value: "spandex" },
@@ -91,6 +95,7 @@ const settingOptions = [
   { label: "Travel", value: "travel" },
   { label: "Festival", value: "festival" },
   { label: "Wedding", value: "wedding" },
+  { label: "Costume", value: "costume" },
 ];
 
 const AddClothingItem = ({ route }) => {

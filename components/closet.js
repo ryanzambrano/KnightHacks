@@ -26,6 +26,8 @@ const ClosetUI = ({ route, navigation }) => {
   const [pants, setPants] = useState([]);
   const [shoes, setShoes] = useState([]);
   const [accessories, setAccessories] = useState([]);
+  const [suits, setSuits] = useState([]);
+  const [jackets, setJackets] = useState([]);
 
   // ... You can add more state variables for other clothing types if necessary
 
@@ -91,6 +93,9 @@ const ClosetUI = ({ route, navigation }) => {
       const hatsData = enrichedData.filter(
         (photo) => photo.clothing_type === "hat"
       );
+      const jacketsData = enrichedData.filter(
+        (photo) => photo.clothing_type === "jacket / sweater"
+      );
       const shirtsData = enrichedData.filter(
         (photo) => photo.clothing_type === "shirt"
       );
@@ -101,14 +106,20 @@ const ClosetUI = ({ route, navigation }) => {
         (photo) => photo.clothing_type === "shoes"
       );
       const accessoriesData = enrichedData.filter(
-        (photo) => photo.clothing_type === "accessories"
+        (photo) => photo.clothing_type === "accessory"
+      );
+      const suitsData = enrichedData.filter(
+        (photo) => photo.clothing_type === "suit / dress"
       );
 
+
       setHats(hatsData);
+      setJackets(jacketsData);
       setShirts(shirtsData);
       setPants(pantsData);
       setShoes(shoesData);
       setAccessories(accessoriesData);
+      setSuits(suitsData);
     } else {
       console.error("Failed to fetch image metadata from database:", error);
     }
@@ -156,6 +167,47 @@ const ClosetUI = ({ route, navigation }) => {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => "hat_" + index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.imageContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("ClothingItem", { item });
+                  }}
+                >
+                  <Image source={{ uri: item.url }} style={styles.image} />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontWeight: "600",
+                    color: "white",
+                    paddingVertical: 5,
+                  }}
+                >
+                  "{item.name}"
+                </Text>
+              </View>
+            )}
+          />
+        </View>
+
+        <View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "bold",
+              paddingLeft: 10,
+              color: "white",
+              paddingVertical: 10,
+            }}
+          >
+            Jackets / Sweaters
+          </Text>
+          <FlatList
+            data={jackets}
+            extraData={photos}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => "jackets_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
                 <TouchableOpacity
@@ -320,7 +372,7 @@ const ClosetUI = ({ route, navigation }) => {
             paddingBottom={100}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => "accessories" + index.toString()}
+            keyExtractor={(item, index) => "accessories_" + index.toString()}
             renderItem={({ item }) => (
               <View style={styles.imageContainer}>
                 <TouchableOpacity
@@ -329,7 +381,7 @@ const ClosetUI = ({ route, navigation }) => {
                   }}
                 >
                   <Image source={{ uri: item.url }} style={styles.image} />
-                </TouchableOpacity>{" "}
+                </TouchableOpacity>
                 <Text
                   style={{
                     fontWeight: "600",
@@ -342,6 +394,11 @@ const ClosetUI = ({ route, navigation }) => {
               </View>
             )}
           />
+          <View>
+          
+          
+          
+        </View>
         </View>
       </ScrollView>
       <StatusBar style="light" />
@@ -374,7 +431,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    margin: 10,
+    marginVertical: 10,
+    marginHorizontal: 5,
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingBottom: 10,
