@@ -24,7 +24,7 @@ const MakeMyOutfitUI = ({ route }) => {
     return null;
   };
   
-  const apiKey = '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'; // Replace with your actual API key
+  const apiKey = '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'; // Replace with your actual API key
   const openai = new OpenAI({
     apiKey
   });
@@ -35,7 +35,7 @@ const MakeMyOutfitUI = ({ route }) => {
 
     const { data, error } = await supabase
     .from('user_images')
-    .select('color, setting, material, fit, clothing_type, name')
+    .select('color, setting, material, fit, clothing_type, name, user_id, url')
     .eq('user_id', id);
 
   if (error) {
@@ -44,10 +44,12 @@ const MakeMyOutfitUI = ({ route }) => {
 }   else {
   // 'data' contains the selected rows
   const newWardrobeString = data.map(item => {
-    return `${item.color}, ${item.setting}, ${item.material}, ${item.fit}, ${item.clothing_type}, ${item.name}`;
+    return `Color: ${item.color}, Setting: ${item.setting}, Material: ${item.material}, Fit: ${item.fit}, Clothing Type: ${item.clothing_type}, Name: ${item.name}, URL: ${item.url}` ;
+
   }).join('\n');
 
   setWardrobeString(newWardrobeString)
+  console.log(wardrobeString);
 
   //console.log('Wardrobe as a single string:', wardrobeString);
   // Use 'data' in your application
@@ -63,12 +65,11 @@ const MakeMyOutfitUI = ({ route }) => {
     try {
       
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt 4",
         messages: [
           {
             "role": "system",
-            "content": "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that based on what is in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event but give them an outfit with their wardrobe. It should be outputted in this exactly in this format so don't say anything before the outfit: \"\nOutfit: \nTop:\n Your x (name), \nBottom:  \nYour x(name), \nShoes: \nYour x(name)\nHats and/or accessories\nYour x(name)\n\" If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \"enjoy your new drip!\""
-          },
+            "content": "You are a stylist who needs to help me a male decide on one outfit. To decide on the outfit you should do it in this hierarchy: socially acceptable, then color theory. It has to be clothes in their wardrobe do not mention clothes that are not in their wardrobe. If you think that there is nothing in this person's wardrobe that is acceptable for the event they are attending you should mention that based on what is in their wardrobe. If you think they would like an outfit that is not socially acceptable for said event you should mention that type of outfit isn't socially acceptable for said event but give them an outfit with their wardrobe. It should be outputted in this exact format so don't say anything before saying which outfit it is going to be: \n\"\nOutfit: \nTop:\n Your x (name), \nBottom: \nYour x(name), \nShoes: \nYour x(name)\nHats and/or accessories\nYour x(name)\n\" If the user mentions where they are going tell them to enjoy said event. If they don't mention where they are going just say \n\"Enjoy your new drip!\". Give me the URLs with the respective items at the bottom of the response in the order of hat, top, bottom, shoes, and accessories in a comma-separated format like this: urlx,urly,urlz. No need to mention which one is which just give me the URLs in a comma-separated sentence.\n"          },
           {
             "role": "user",
             "content": wardrobeString
@@ -79,12 +80,13 @@ const MakeMyOutfitUI = ({ route }) => {
           }
         ],
         temperature: 1,
-        max_tokens: 738,
+        max_tokens: 2000,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
       });
       const translated = response.choices[0].message;
+      console.log(translated);
       setTranslatedResponse(translated);
       // console.log(response.data.choices[0].text.trimStart());
    
