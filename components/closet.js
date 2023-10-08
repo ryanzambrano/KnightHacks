@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { supabase } from "./auth/supabase";
+import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
@@ -343,6 +344,7 @@ const ClosetUI = ({ route, navigation }) => {
           />
         </View>
       </ScrollView>
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 };

@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { TextInput } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "./auth/supabase";
 import { decode } from "base64-arraybuffer";

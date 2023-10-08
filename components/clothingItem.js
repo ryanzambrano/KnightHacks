@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { TextInput } from "react-native";
-
+import { StatusBar } from "expo-status-bar";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "./auth/supabase";
 import { decode } from "base64-arraybuffer";
@@ -158,6 +158,39 @@ const ClothingItem = ({ route }) => {
       alert(error.message);
     }
   }
+  const deletePictures = async () => {
+    try {
+      const filename = `${session.user.id}/${session.user.id}-${item.last_modified}`;
+
+      const { data: removeData, error: removeError } = await supabase.storage
+        .from("user_pictures")
+        .remove(filename);
+
+      if (removeError) {
+        throw removeError;
+      }
+
+      const { data: removeRow, error: rowError } = await supabase
+        .from("user_images")
+        .delete()
+        .eq("user_id", session.user.id)
+        .eq("last_modified", item.last_modified);
+
+      if (rowError) {
+        throw rowError;
+      }
+
+      if (removeData && removeRow) {
+        //alert("success");
+      }
+
+      if (removeError) {
+        alert(error.message);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   useEffect(() => {
     if (!fetched) {
       fetchItem();
@@ -350,13 +383,17 @@ const ClothingItem = ({ route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.deleteButton}
-              //onPress={delete}
+              onPress={async () => {
+                await deletePictures();
+                navigation.goBack();
+              }}
             >
               <Text style={styles.addButtonText}>Delete</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
+      <StatusBar style="light" />
     </SafeAreaView>
   );
 };
