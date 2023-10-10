@@ -43,6 +43,14 @@ To get started with the Generative AI Closet App, follow these steps:
    SUPABASE_KEY=your_supabase_api_key
    ```
 
+
+4. Configure AI
+
+- Sign up for a openai account.
+- Create a new key.
+- add the key to the .env file.
+- GPT_KEY = your_key
+
 6. Start the app:
 
    ```
