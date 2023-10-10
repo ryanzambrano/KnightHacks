@@ -55,10 +55,9 @@ To get started with the Generative AI Closet App, follow these steps:
 
 ### Adding Clothes to Your Closet
 
-1. Navigate to the "My Closet" section of the app.
-2. Click the "Add Clothes" button.
-3. Upload pictures of your clothes and provide descriptions.
-4. Save the items to your closet.
+1. Click the "Add Clothes" button.
+2. Upload pictures of your clothes and provide descriptions.
+3. Save the items to your closet.
 
 ### Generating Outfit Suggestions
 
@@ -88,10 +87,6 @@ To get started with the Generative AI Closet App, follow these steps:
 ## Contributing
 
 We welcome contributions to improve and expand the Generative AI Closet App. Feel free to submit bug reports, feature requests, or even pull requests to help make this app even better.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
